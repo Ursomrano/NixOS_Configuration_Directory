@@ -245,7 +245,7 @@ in
 
   	# --- Toolchain / core utilities ---
   	gcc
-	cmake
+	gnumake
   	git
   	tree
   	unzip
