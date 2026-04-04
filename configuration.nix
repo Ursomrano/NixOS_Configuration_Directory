@@ -49,7 +49,7 @@ in
 		efi.canTouchEfiVariables = true;
 		efi.efiSysMountPoint = "/boot";
 	};
-  	kernelModules = [ "hid-playstation" "hid-nintendo"];
+  	kernelModules = [ "hid-playstation" "hid-nintendo" ];
   	kernelPackages = pkgs.linuxPackages_xanmod_latest;
 	blacklistedKernelModules = [];
 	initrd.kernelModules = [ "nvidia" "nvidia_uvm" ];
