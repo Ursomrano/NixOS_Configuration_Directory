@@ -2,4 +2,4 @@
 git config filter.hostname.smudge "sed 's/HOSTNAME_PLACEHOLDER/$(hostname)/g'"
 
 # Clean: replaces your hostname with HOSTNAME_PLACEHOLDER when committing/pushing
-git config filter.hostname.clean "sed 's/.*/HOSTNAME_PLACEHOLDER/'"
+git config filter.hostname.clean "sed 's/^  host = \".*\";/  host = \"HOSTNAME_PLACEHOLDER\";/g'"
