@@ -9,7 +9,7 @@ let
     config.allowUnfree = true;
   };
   pkgs = unstable;
-  host = "NixOS-PC";
+  host = "HOSTNAME_PLACEHOLDER";
 in
 
 {
