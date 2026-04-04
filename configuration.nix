@@ -256,8 +256,6 @@ in
 	rustc
 	cargo
 	gemini-cli
-	ollama-cuda
-	#aider-chat
 	valgrind-light
 	flac
 	sox
