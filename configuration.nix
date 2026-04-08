@@ -226,6 +226,7 @@ in
 				fbneo.enable = false;
 				melonds.enable = true;
 				mgba.enable = true;
+				dolphin.enable = true;
 			};
 			settings = {
 				video_driver = "vulkan";
