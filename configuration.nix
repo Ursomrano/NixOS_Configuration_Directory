@@ -226,7 +226,6 @@ in
 				fbneo.enable = false;
 				melonds.enable = true;
 				mgba.enable = true;
-				dolphin.enable = true;
 			};
 			settings = {
 				video_driver = "vulkan";
@@ -291,6 +290,7 @@ in
   	gamemode
   	mangohud
   	fastfetch
+	dolphin-emu
 	
   	# --- File management ---
   	thunar
@@ -299,7 +299,7 @@ in
   	wine
 	wine64
   	mpv
-	eden
+	
 
   	# --- Networked / online applications ---
 	brave
