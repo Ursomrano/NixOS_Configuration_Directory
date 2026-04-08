@@ -249,6 +249,7 @@ in
   	git
   	tree
   	unzip
+	unrar
 	mediainfo
 	gparted-full
 	python315
