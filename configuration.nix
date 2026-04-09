@@ -286,6 +286,7 @@ in
   	# --- Terminals / editors ---
   	alacritty
   	neovim
+	obs-studio
 
   	# --- System info / performance / gaming helpers ---
   	gamemode
