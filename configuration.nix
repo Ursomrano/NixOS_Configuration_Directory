@@ -287,6 +287,7 @@ in
   	alacritty
   	neovim
 	obs-studio
+	blender
 
   	# --- System info / performance / gaming helpers ---
   	gamemode
