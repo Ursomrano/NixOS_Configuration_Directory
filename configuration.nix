@@ -260,6 +260,7 @@ in
 	valgrind-light
 	flac
 	sox
+	p7zip
 
 	# --- LSP/Language Servers/Dictionaries ---
 	bash-language-server
