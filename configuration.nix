@@ -289,7 +289,6 @@ in
   	neovim
 	obs-studio
 	blender
-	drawio
 
   	# --- System info / performance / gaming helpers ---
   	gamemode
