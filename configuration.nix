@@ -289,6 +289,7 @@ in
   	neovim
 	obs-studio
 	blender
+	obsidian
 
   	# --- System info / performance / gaming helpers ---
   	gamemode
