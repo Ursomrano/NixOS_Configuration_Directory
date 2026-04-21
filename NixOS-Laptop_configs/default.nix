@@ -6,7 +6,7 @@ with lib;
   options.laptop.enable = mkOption {
     type = types.bool;
     default = true;
-    description = "Enable laptop-specific configuration (GPU, power, thunderbolt, etc.)";
+    description = "Enable laptop-specific configuration";
   };
 
   config = mkIf config.laptop.enable {
@@ -20,10 +20,12 @@ with lib;
       modesetting.enable = true;
       open = false;
       nvidiaSettings = true;
+
       powerManagement.enable = true;
       powerManagement.finegrained = true;
       nvidiaPersistenced = true;
       dynamicBoost.enable = true;
+
       package = config.boot.kernelPackages.nvidiaPackages.beta;
 
       prime = {
@@ -36,12 +38,11 @@ with lib;
       };
     };
 
-    # KERNEL POWER BASELINE
+    # POWER BASELINE
     boot.kernel.sysctl = {
       "dev.power.dpm" = "performance";
     };
 
-    # THUNDERBOLT
     services.hardware.bolt.enable = true;
 
     # TLP
@@ -50,46 +51,32 @@ with lib;
       settings = {
         CPU_SCALING_GOVERNOR_ON_AC = "performance";
         CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+
         CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
         CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
-
-        CPU_MIN_PERF_ON_AC = 0;
-        CPU_MIN_PERF_ON_BAT = 0;
-        CPU_MAX_PERF_ON_AC = 100;
-        CPU_MAX_PERF_ON_BAT = 40;
 
         RUNTIME_PM_ON_AC = "off";
         RUNTIME_PM_ON_BAT = "auto";
 
-        RUNTIME_PM_BLACKLIST = "0000:01:00.0";
-
         SATA_LINKPWR_ON_AC = "medium_power";
         SATA_LINKPWR_ON_BAT = "min_power";
 
+        NVME_APST_ON_AC = 1;
         NVME_APST_ON_BAT = 1;
-        NVME_APST_ON_AC  = 1;
-
-        WIFI_PWR_ON_AC = "off";
-        WIFI_PWR_ON_BAT = "on";
       };
     };
+
     powerManagement.powertop.enable = false;
 
-    #EXPLICIT BATTERY AND PERFORMANCE MODE SYSTEM
+    # POWER PROFILES
     systemd.services.laptop-mode-battery = {
       description = "Laptop Battery Mode";
       wantedBy = [ "multi-user.target" ];
+      after = [ "multi-user.target" ];
       serviceConfig.Type = "oneshot";
 
       script = ''
-        echo low-power > /sys/firmware/acpi/platform_profile 2>/dev/null || true
-
-        for cpu in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
-          echo powersave > $cpu 2>/dev/null || true
-        done
-
-        echo 1 > /sys/devices/system/cpu/intel_pstate/no_turbo 2>/dev/null || true
-        echo 0 > /sys/devices/system/cpu/cpufreq/boost 2>/dev/null || true
+        echo quiet > /sys/firmware/acpi/platform_profile 2>/dev/null || true
       '';
     };
 
@@ -99,62 +86,49 @@ with lib;
 
       script = ''
         echo performance > /sys/firmware/acpi/platform_profile 2>/dev/null || true
-
-        for cpu in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
-          echo performance > $cpu 2>/dev/null || true
-        done
-
-        echo 0 > /sys/devices/system/cpu/intel_pstate/no_turbo 2>/dev/null || true
-        echo 1 > /sys/devices/system/cpu/cpufreq/boost 2>/dev/null || true
       '';
     };
-    # USER-FACING SWITCH COMMAND
+
+    systemd.services.laptop-mode-balanced = {
+      description = "Laptop Balanced Mode";
+      serviceConfig.Type = "oneshot";
+
+      script = ''
+        echo balanced > /sys/firmware/acpi/platform_profile 2>/dev/null || true
+      '';
+    };
+
+    # USER COMMAND
     environment.systemPackages = [
       (pkgs.writeShellScriptBin "laptop-mode" ''
         case "$1" in
           battery)
             systemctl start laptop-mode-battery
             ;;
+          balanced)
+            systemctl start laptop-mode-balanced
+            ;;
           performance)
             systemctl start laptop-mode-performance
             ;;
           *)
-            echo "Usage: laptop-mode [battery|performance]"
+            echo "Usage: laptop-mode [battery|balanced|performance]"
             ;;
         esac
       '')
     ];
 
-    # YOUR EXISTING DYNAMIC CHARGING
-    systemd.services.dynamic-charging = {
-      description = "Dynamic TLP battery threshold based on temperature";
-      after = [ "multi-user.target" ];
-      serviceConfig = {
-        Type = "oneshot";
-        ExecStart = "/etc/nixos/NixOS-Laptop_configs/dynamic_charging.sh";
-      };
-      wantedBy = [ "multi-user.target" ];
-    };
-
-    systemd.timers.dynamic-charging = {
-      description = "Run TLP temperature-based threshold every 2.5 minutes";
-      wantedBy = [ "timers.target" ];
-      timerConfig = {
-        OnBootSec = "1min";
-        OnUnitActiveSec = "2min";
-      };
-    };
-
-    # KERNEL MODULES / PARAMS
-    boot = {
-      initrd.availableKernelModules = [ "thunderbolt" "ucsi_acpi" "typec" ];
-
-      kernelParams = [
-        "usbcore.autosuspend=-1"
-        "drm.atomic=1"
-        "split_lock_detect=off"
-        "i915.enable_psr=0"
-      ];
-    };
+    # KERNEL / BOOT
+    boot.kernelParams = [
+      "usbcore.autosuspend=-1"
+      "drm.atomic=1"
+      "split_lock_detect=off"
+      "i915.enable_psr=0"
+    ];
+    boot.initrd.availableKernelModules = [
+      "thunderbolt"
+      "ucsi_acpi"
+      "typec"
+    ];
   };
 }
