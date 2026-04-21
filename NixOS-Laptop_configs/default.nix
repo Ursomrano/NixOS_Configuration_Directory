@@ -88,14 +88,13 @@ with lib;
           echo powersave > $cpu 2>/dev/null || true
         done
 
-        echo 0 > /sys/devices/system/cpu/intel_pstate/no_turbo 2>/dev/null || true
+        echo 1 > /sys/devices/system/cpu/intel_pstate/no_turbo 2>/dev/null || true
         echo 0 > /sys/devices/system/cpu/cpufreq/boost 2>/dev/null || true
       '';
     };
 
     systemd.services.laptop-mode-performance = {
       description = "Laptop Performance Mode";
-      wantedBy = [ "multi-user.target" ];
       serviceConfig.Type = "oneshot";
 
       script = ''
@@ -105,7 +104,7 @@ with lib;
           echo performance > $cpu 2>/dev/null || true
         done
 
-        echo 1 > /sys/devices/system/cpu/intel_pstate/no_turbo 2>/dev/null || true
+        echo 0 > /sys/devices/system/cpu/intel_pstate/no_turbo 2>/dev/null || true
         echo 1 > /sys/devices/system/cpu/cpufreq/boost 2>/dev/null || true
       '';
     };
