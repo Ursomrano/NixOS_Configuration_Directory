@@ -10,6 +10,7 @@ let
   };
   pkgs = unstable;
   host = "HOSTNAME_PLACEHOLDER";
+  hostIcon = if host == "NixOS-Laptop" then " " else "󰇅";
 in
 
 {
@@ -194,7 +195,7 @@ in
 		interactiveShellInit = builtins.concatStringsSep "\n" [
     			"fastfetch"
     			# Use $'...' so the shell will interpret \n as newline
-   			"PROMPT=$'[%n@ 󰇅]{ %~ }\\n> '"
+   			"PROMPT=$'[%n@ ${hostIcon}]{ %~ }\\n> '"
   		];
 	};
 	waybar.enable = true;
@@ -354,4 +355,6 @@ in
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
+}
+ateful data, like file locations and database versions
 }
