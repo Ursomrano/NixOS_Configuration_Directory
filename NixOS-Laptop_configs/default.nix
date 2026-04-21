@@ -69,50 +69,27 @@ with lib;
     powerManagement.powertop.enable = false;
 
     # POWER PROFILES
-    systemd.services.laptop-mode-battery = {
-      description = "Laptop Battery Mode";
-      wantedBy = [ "multi-user.target" ];
-      after = [ "multi-user.target" ];
-      serviceConfig.Type = "oneshot";
-
-      script = ''
-        echo quiet > /sys/firmware/acpi/platform_profile 2>/dev/null || true
-      '';
-    };
-
-    systemd.services.laptop-mode-performance = {
-      description = "Laptop Performance Mode";
-      serviceConfig.Type = "oneshot";
-
-      script = ''
-        echo performance > /sys/firmware/acpi/platform_profile 2>/dev/null || true
-      '';
-    };
-
-    systemd.services.laptop-mode-balanced = {
-      description = "Laptop Balanced Mode";
-      serviceConfig.Type = "oneshot";
-
-      script = ''
-        echo balanced > /sys/firmware/acpi/platform_profile 2>/dev/null || true
-      '';
-    };
+    systemd.tmpfiles.rules = [
+      "w /sys/firmware/acpi/platform_profile - - - - quiet"
+      "z /sys/firmware/acpi/platform_profile 0664 root wheel - -"
+    ];
 
     # USER COMMAND
     environment.systemPackages = [
       (pkgs.writeShellScriptBin "laptop-mode" ''
         case "$1" in
           battery)
-            systemctl start laptop-mode-battery
+            echo quiet > /sys/firmware/acpi/platform_profile
             ;;
           balanced)
-            systemctl start laptop-mode-balanced
+            echo balanced > /sys/firmware/acpi/platform_profile
             ;;
           performance)
-            systemctl start laptop-mode-performance
+            echo performance > /sys/firmware/acpi/platform_profile
             ;;
           *)
             echo "Usage: laptop-mode [battery|balanced|performance]"
+            echo "Current mode: $(cat /sys/firmware/acpi/platform_profile)"
             ;;
         esac
       '')
