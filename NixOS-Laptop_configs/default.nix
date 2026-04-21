@@ -146,9 +146,7 @@ with lib;
       };
     };
 
-    # ----------------------------
-    # KERNEL MODULES / PARAMS (UNCHANGED)
-    # ----------------------------
+    # KERNEL MODULES / PARAMS
     boot = {
       initrd.availableKernelModules = [ "thunderbolt" "ucsi_acpi" "typec" ];
 
