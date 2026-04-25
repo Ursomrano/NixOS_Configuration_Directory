@@ -16,26 +16,32 @@ with lib;
 
     # GPU CONFIG
     services.xserver.videoDrivers = [ "modesetting" "nvidia" ];
-    hardware.nvidia = {
-      modesetting.enable = true;
-      open = false;
-      nvidiaSettings = true;
+    hardware= {
+    	graphics = {
+		enable = true;
+		enable32Bit = true;
+	};
+    	nvidia = {
+      		modesetting.enable = true;
+      		open = false;
+      		nvidiaSettings = true;
 
-      powerManagement.enable = true;
-      powerManagement.finegrained = true;
-      nvidiaPersistenced = true;
-      dynamicBoost.enable = true;
+      		powerManagement.enable = true;
+      		powerManagement.finegrained = true;
+      		nvidiaPersistenced = true;
+      		dynamicBoost.enable = true;
 
-      package = config.boot.kernelPackages.nvidiaPackages.beta;
+      		package = config.boot.kernelPackages.nvidiaPackages.beta;
 
-      prime = {
-        intelBusId = "PCI:0:2:0";
-        nvidiaBusId = "PCI:1:0:0";
-        offload = {
-          enable = true;
-          enableOffloadCmd = true;
-        };
-      };
+      		prime = {
+        		intelBusId = "PCI:0:2:0";
+        		nvidiaBusId = "PCI:1:0:0";
+        		offload = {
+          			enable = true;
+          			enableOffloadCmd = true;
+        		};
+      		};
+    	};
     };
 
     # POWER BASELINE
