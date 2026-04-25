@@ -17,13 +17,19 @@ with lib;
     		services.xserver= {
 			videoDrivers = [ "nvidia" "modesetting"];
 		};
-    		hardware.nvidia = {
-      			open = false;
-			modesetting.enable = true;
-      			nvidiaSettings = true;
-			nvidiaPersistenced = true;
-      			package = config.boot.kernelPackages.nvidiaPackages.beta;
-    		};
+		hardware = {
+			nvidia = {
+				open = false;
+				modesetting.enable = true;
+      				nvidiaSettings = true;
+				nvidiaPersistenced = true;
+      				package = config.boot.kernelPackages.nvidiaPackages.beta;
+			};
+			graphics = {
+				enable = true;
+				enable32Bit = true;
+			};
+		};
     		# Kernel modules for initrd
     		boot = {
     			initrd.availableKernelModules = [ "thunderbolt" "ucsi_acpi" "typec" ];
