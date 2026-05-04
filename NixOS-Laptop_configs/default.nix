@@ -31,7 +31,7 @@ with lib;
       		nvidiaPersistenced = true;
       		dynamicBoost.enable = true;
 
-      		package = config.boot.kernelPackages.nvidiaPackages.beta;
+      		package = config.boot.kernelPackages.nvidiaPackages.latest;
 
       		prime = {
         		intelBusId = "PCI:0:2:0";
