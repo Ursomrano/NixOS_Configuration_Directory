@@ -19,11 +19,11 @@ with lib;
 		};
 		hardware = {
 			nvidia = {
-				open = false;
+				open = true;
 				modesetting.enable = true;
       				nvidiaSettings = true;
 				nvidiaPersistenced = true;
-      				package = config.boot.kernelPackages.nvidiaPackages.beta;
+      				package = config.boot.kernelPackages.nvidiaPackages.latest;
 			};
 			graphics = {
 				enable = true;
