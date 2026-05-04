@@ -16,19 +16,11 @@ in
     # Deploy the full *blank*.conf
     home-manager.users.${user}.home.file = {
     ".config/mako/config".text = ''
-# General behavior
 default-timeout=5000
-ignore-timeout=0
-
-# Optional: better urgency handling
-[urgency=low]
-default-timeout=5000
-
-[urgency=normal]
-default-timeout=7500
+ignore-timeout=1
 
 [urgency=high]
-default-timeout=0
+default-timeout=8000    
     '';
     ".config/mako/config".force = true;
     };
