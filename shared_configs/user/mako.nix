@@ -17,7 +17,7 @@ in
     home-manager.users.${user}.home.file = {
     ".config/mako/config".text = ''
 default-timeout=5000
-ignore-timeout=1
+ignore-timeout=0
 
 [urgency=high]
 default-timeout=8000    
