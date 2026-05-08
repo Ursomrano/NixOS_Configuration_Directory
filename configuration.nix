@@ -141,10 +141,6 @@ in
 	jack.enable = true;
   };
   services.pulseaudio.enable = false;
-  services.udev.extraRules = ''
-  	ACTION=="add", SUBSYSTEM=="usb", TEST=="power/control", ATTR{power/control}="on"
-	ACTION=="add", SUBSYSTEM=="pci", ATTR{power/control}="on"
-  '';
 
   security.rtkit.enable = true;
 

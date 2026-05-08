@@ -19,7 +19,7 @@ with lib;
 		};
 		hardware = {
 			nvidia = {
-				open = true;
+				open = false;
 				modesetting.enable = true;
       				nvidiaSettings = true;
 				nvidiaPersistenced = true;
