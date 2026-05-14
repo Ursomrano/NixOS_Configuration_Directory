@@ -311,6 +311,7 @@ in
 
   	# --- Gaming / launchers ---
   	prismlauncher
+	sidequest
 
   	# --- Custom system maintenance ---
   	(writeShellScriptBin "nixos-update" ''
