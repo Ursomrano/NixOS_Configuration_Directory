@@ -250,7 +250,7 @@ in
 	mediainfo
 	gparted-full
 	python315
-	nodejs_25
+	nodejs
 	rustc
 	cargo
 	gemini-cli

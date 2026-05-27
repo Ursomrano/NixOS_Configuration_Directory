@@ -113,5 +113,19 @@ with lib;
       "ucsi_acpi"
       "typec"
     ];
+
+    # PRINTER
+    services.printing.enable = true;
+    services.avahi = {
+      enable = true;
+      nssmdns4 = true;
+      openFirewall = true;
+    };
+    services.ipp-usb.enable = true;
+    services.printing.drivers = [
+      pkgs.cups-filters
+      pkgs.cups-browsed
+    ];
   };
 }
+
