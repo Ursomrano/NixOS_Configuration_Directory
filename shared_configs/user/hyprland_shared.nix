@@ -237,7 +237,7 @@ render {
    direct_scanout = 2
    non_shader_cm = 1
    cm_auto_hdr = 1
-   cm_sdr_eotf = 2
+   cm_sdr_eotf = "gamma22force"
 }
 
 quirks {
