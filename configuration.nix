@@ -21,7 +21,9 @@ in
       ./${host}_configs/hardware-configuration.nix
 
       # --- Host-specific user tweaks ---
-      ./${host}_configs/user/hyprland.nix
+      # ./${host}_configs/user/hyprland.nix
+      (if host == "NixOS-Laptop" then ./NixOS-Laptop_configs/user/hyprland_laptop.nix else ./NixOS-PC_configs/user/hyprland_pc.nix)
+      ./shared_configs/user/hyprland_shared.nix
       ./${host}_configs/user/mangohud.nix
       ./${host}_configs/user/waybar/waybar.nix
 
@@ -280,6 +282,11 @@ in
   	libnotify
   	pavucontrol
 	brightnessctl
+	grim
+	slurp
+	swappy
+	fcitx5
+	blueman
 
   	# --- Terminals / editors ---
   	alacritty
