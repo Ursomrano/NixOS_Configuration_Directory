@@ -103,7 +103,7 @@ in
     isNormalUser = true;
     shell = pkgs.zsh;
     description = "Ursomrano71";
-    extraGroups = [ "seat" "networkmanager" "wheel" "input" "plugdev"];
+    extraGroups = [ "networkmanager" "wheel" "input" "plugdev"];
     packages = with pkgs; [];
   };
 
@@ -127,8 +127,8 @@ in
   services.resolved.enable = true;
   services.flatpak.enable = true;
   #user and auto login
-  services.getty.autologinUser = "ursomrano71";
-  services.seatd.enable = true;
+  # services.getty.autologinUser = "ursomrano71";
+  services.seatd.enable = false;
   services.greetd = {
 	enable = true;
 	settings.default_session.command = "start-hyprland";

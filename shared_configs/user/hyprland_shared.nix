@@ -224,6 +224,9 @@ misc {
     enable_swallow = true
     swallow_regex = ^(cachy-browser|firefox|nautilus|nemo|thunar|btrfs-assistant.)$
     focus_on_activate = true
+}
+
+debug {
     vfr = true
 }
 
@@ -233,7 +236,6 @@ render {
    new_render_scheduling = true
    direct_scanout = 2
    non_shader_cm = 1
-   cm_fs_passthrough = 2
    cm_auto_hdr = 1
    cm_sdr_eotf = 2
 }
@@ -244,7 +246,6 @@ quirks {
 
 dwindle {
     special_scale_factor = 0.8
-    pseudotile = true
     preserve_split = true
 }
 
