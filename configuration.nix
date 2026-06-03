@@ -312,7 +312,7 @@ in
 
   	# --- Networked / online applications ---
 	brave
-  	discord
+  	discord-canary
 	qbittorrent
 	nicotine-plus
 	proton-vpn
