@@ -29,7 +29,7 @@ monitorv2 {
 	vrr = 2
 	bitdepth = 10
 	cm = hdr
-	sdrsaturation = 1.21
+	sdrsaturation = 1.20
 	sdrbrightness = 1
 	sdr_min_luminance = 0.005
 	sdr_max_luminance = 200

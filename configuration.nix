@@ -258,6 +258,7 @@ in
 	gemini-cli
 	valgrind-light
 	flac
+	rsgain
 	sox
 	p7zip
 
