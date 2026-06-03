@@ -65,7 +65,7 @@ in
 		operation = "switch";
 		allowReboot = true;
 	};
-  	stateVersion = "26.05";
+  	stateVersion = "26.11";
   };
 
   # Define your hostname.(defined in laptop.nix)
@@ -208,7 +208,7 @@ in
 	};
   };
   home-manager.users.ursomrano71 = {
-  	home.stateVersion = "25.11";
+  	home.stateVersion = "26.05";
 	nixpkgs.config.allowUnfree = true;
 	systemd.user.startServices = "sd-switch";
 	home.packages = with pkgs; [
