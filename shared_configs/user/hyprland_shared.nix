@@ -90,6 +90,8 @@ envd = XCURSOR_SIZE,24
 envd = QT_CURSOR_SIZE,24
 env = __GL_MaxFramesAllowed,1
 env = __GL_ThreadControl,1
+env = WLR_NO_HARDWARE_CURSORS,1
+env = WLR_RENDERER_ALLOW_SOFTWARE,1
 
 # ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 # ┃                      Input Configuration                    ┃
@@ -106,7 +108,7 @@ bindd = $mainMod, RETURN, Opens your preferred terminal emulator ($terminal), ex
 bindd = $mainMod, W, Opens Brave, exec, $scaling brave --disable-features=WaylandWpColorManagerV1
 bindd = $mainMod, S, Opens Spotify, exec, env LD_PRELOAD=/usr/lib/spotify-adblock.so $scaling spotify --uri=%U
 bindd = $mainMod, G, Opens Steam, exec, $scaling steam
-bindd = $mainMod, D, Opens Discord, exec, $scaling discord
+bindd = $mainMod, D, Opens Discord, exec, $scaling discordcanary
 bindd = $mainMod Shift, R, Reloads hyprland and waybar, exec, killall waybar && waybar & disown
 bindd = $mainMod, Q, Closes (not kill) current window, killactive,
 bindd = $mainMod, Tab, Runs your application launcher, exec, $applauncher
@@ -197,6 +199,11 @@ general {
     snap {
         enabled = true
     }
+}
+
+cursor {
+    no_hardware_cursors = 1
+    use_cpu_buffer = 2
 }
 
 group {
