@@ -57,13 +57,14 @@ sigmoid-upscaling=yes
 # HDR / COLOR
 ############################
 
-target-colorspace-hint=auto
-target-colorspace-hint-mode=target
-tone-mapping=clip
-hdr-compute-peak=no
+target-colorspace-hint=yes
+target-colorspace-hint-mode=source
+target-prim=bt.2020
+tone-mapping=hable
+hdr-compute-peak=yes
 hdr-peak-percentile=100
 target-peak=auto
-target-trc=auto
+target-trc=pq
 
 ############################
 # PROFILES
