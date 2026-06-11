@@ -57,7 +57,7 @@ sigmoid-upscaling=yes
 # HDR / COLOR
 ############################
 
-target-colorspace-hint=no
+target-colorspace-hint=source
 tone-mapping=clip
 hdr-compute-peak=no
 hdr-peak-percentile=100

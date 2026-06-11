@@ -202,7 +202,7 @@ general {
 }
 
 cursor {
-    no_hardware_cursors = 1
+    no_hardware_cursors = 0
     use_cpu_buffer = 2
 }
 
