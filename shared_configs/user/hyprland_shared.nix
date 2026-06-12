@@ -12,7 +12,7 @@ in
 
   config = mkIf config.hyprland.shared.enable {
     home-manager.users.${user}.home.file = {
-      ".config/hypr/shared.lua" = {
+      ".config/hypr/hyprland.lua" = {
         text = ''
 -- ┃                 CachyOS Hyprland Shared Config              ┃
 
