@@ -12,304 +12,288 @@ in
 
   config = mkIf config.hyprland.shared.enable {
     home-manager.users.${user}.home.file = {
-      ".config/hypr/shared.conf" = {
+      ".config/hypr/shared.lua" = {
         text = ''
-# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-# ┃                 CachyOS Hyprland Shared Config              ┃
-# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+-- ┃                 CachyOS Hyprland Shared Config              ┃
 
-$mainMod = SUPER
+mainMod = "SUPER"
+applauncher = "wofi --show run,drun"
+terminal = "alacritty"
 
-# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-# ┃                    Animations Configuration                 ┃
-# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-animations {
-    enabled = yes
-    bezier = overshot, 0.13, 0.99, 0.29, 1.1
-    animation = windowsIn, 1, 4, overshot, slide
-    animation = windowsOut, 1, 5, default, popin 80%
-    animation = border, 1, 5, default
-    animation = workspacesIn, 1, 6, overshot, slide
-    animation = workspacesOut, 1, 6, overshot, slidefade 80%
-}
-
-# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-# ┃                     Defaults Configuration                  ┃
-# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-$filemanager =
-$applauncher = wofi --show run,drun
-$terminal = alacritty
-
-# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-# ┃                    Autostart Configuration                  ┃
-# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-exec-once = /home/ursomrano71/Documents/Programs/Shell/random_wallpapers.sh
-exec-once = waybar
-exec-once = fcitx5 -d &
-exec-once = mako &
-exec-once = /home/ursomrano71/Documents/Programs/Shell/backup_script.sh
-exec-once = hyprctl setcursor Bibata-Modern-Ice 24
-exec-once = systemctl --user import-environment &
-exec-once = hash dbus-update-activation-environment 2>/dev/null &
-exec-once = dbus-update-activation-environment --systemd &
-
-# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-# ┃                      Colors Configuration                   ┃
-# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-$cachylgreen = rgba(82dcccff)
-$cachymgreen = rgba(00aa84ff)
-$cachydgreen = rgba(007d6fff)
-$cachylblue = rgba(01ccffff)
-$cachymblue = rgba(182545ff)
-$cachydblue = rgba(111826ff)
-$cachywhite = rgba(ffffffff)
-$cachygrey = rgba(ddddddff)
-$cachygray = rgba(798bb2ff)
-
-# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-# ┃                    Decorations Configuration                ┃
-# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-decoration {
-    active_opacity = 1
-    rounding = 4
-    blur {
-        size = 15
-        passes = 2
-        xray = true
+-- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+-- ┃                    Animations Configuration                 ┃
+-- ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+hl.config({
+    animations = {
+        enabled = true,
     }
-    shadow {
-        enabled = false
+})
+
+hl.curve("overshot", { type = "bezier", points = { {0.13, 0.99}, {0.29, 1.1} } })
+
+hl.animation({ leaf = "windowsIn", enabled = true, speed = 4, bezier = "overshot", style = "slide" })
+hl.animation({ leaf = "windowsOut", enabled = true, speed = 5, bezier = "default", style = "popin 80%" })
+hl.animation({ leaf = "border", enabled = true, speed = 5, bezier = "default" })
+hl.animation({ leaf = "workspacesIn", enabled = true, speed = 6, bezier = "overshot", style = "slide" })
+hl.animation({ leaf = "workspacesOut", enabled = true, speed = 6, bezier = "overshot", style = "slidefade 80%" })
+
+-- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+-- ┃                    Autostart Configuration                  ┃
+-- ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+hl.on("hyprland.start", function ()
+    hl.exec_cmd("/home/ursomrano71/Documents/Programs/Shell/random_wallpapers.sh")
+    hl.exec_cmd("waybar")
+    hl.exec_cmd("fcitx5 -d &")
+    hl.exec_cmd("mako &")
+    hl.exec_cmd("/home/ursomrano71/Documents/Programs/Shell/backup_script.sh")
+    hl.exec_cmd("hyprctl setcursor Bibata-Modern-Ice 24")
+    hl.exec_cmd("systemctl --user import-environment &")
+    hl.exec_cmd("hash dbus-update-activation-environment 2>/dev/null &")
+    hl.exec_cmd("dbus-update-activation-environment --systemd &")
+end)
+
+-- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+-- ┃                      Colors Configuration                   ┃
+-- ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+cachylgreen = "rgba(82dcccff)"
+cachymgreen = "rgba(00aa84ff)"
+cachydgreen = "rgba(007d6fff)"
+cachylblue  = "rgba(01ccffff)"
+cachymblue  = "rgba(182545ff)"
+cachydblue  = "rgba(111826ff)"
+cachywhite  = "rgba(ffffffff)"
+cachygrey   = "rgba(ddddddff)"
+cachygray   = "rgba(798bb2ff)"
+
+-- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+-- ┃                    Decorations Configuration                ┃
+-- ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+hl.config({
+    decoration = {
+        active_opacity = 1,
+        rounding = 4,
+        blur = {
+            size = 15,
+            passes = 2,
+            xray = true,
+        },
+        shadow = {
+            enabled = false,
+        }
     }
-}
+})
 
-# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-# ┃                    Enviroment Configuration                 ┃
-# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-envd = HYPRCURSOR_SIZE,24
-envd = XCURSOR_SIZE,24
-envd = QT_CURSOR_SIZE,24
-env = __GL_MaxFramesAllowed,1
-env = __GL_ThreadControl,1
-env = WLR_NO_HARDWARE_CURSORS,1
-env = WLR_RENDERER_ALLOW_SOFTWARE,1
+-- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+-- ┃                    Enviroment Configuration                 ┃
+-- ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+hl.env("HYPRCURSOR_SIZE", "24")
+hl.env("XCURSOR_SIZE", "24")
+hl.env("QT_CURSOR_SIZE", "24")
+hl.env("__GL_MaxFramesAllowed", "1")
+hl.env("__GL_ThreadControl", "1")
+hl.env("WLR_NO_HARDWARE_CURSORS", "1")
+hl.env("WLR_RENDERER_ALLOW_SOFTWARE", "1")
 
-# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-# ┃                      Input Configuration                    ┃
-# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-input {
-    follow_mouse = 2
-    float_switch_override_focus = 2
-}
-
-# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-# ┃                         Keybinds                            ┃
-# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-bindd = $mainMod, RETURN, Opens your preferred terminal emulator ($terminal), exec, $terminal
-bindd = $mainMod, W, Opens Brave, exec, $scaling brave --disable-features=WaylandWpColorManagerV1
-bindd = $mainMod, S, Opens Spotify, exec, env LD_PRELOAD=/usr/lib/spotify-adblock.so $scaling spotify --uri=%U
-bindd = $mainMod, G, Opens Steam, exec, $scaling steam
-bindd = $mainMod, D, Opens Discord, exec, $scaling discordcanary
-bindd = $mainMod Shift, R, Reloads hyprland and waybar, exec, killall waybar && waybar & disown
-bindd = $mainMod, Q, Closes (not kill) current window, killactive,
-bindd = $mainMod, Tab, Runs your application launcher, exec, $applauncher
-bindd = $mainMod, F, Toggles current window fullscreen mode, fullscreen
-
-# ======= Volume Control (Unified: Laptop Style) =======
-bindel = , XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_SINK@ 5%+
-bindel = , XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_SINK@ 5%-
-bindel = , XF86AudioMute, exec, wpctl set-mute @DEFAULT_SINK@ toggle
-
-# ======= Screen Brightness (Unified: PC Style - 5%) =======
-bindel = , XF86MonBrightnessUp, exec, brightnessctl s +5%
-bindel = , XF86MonBrightnessDown, exec, brightnessctl s 5%-
-
-# ======= Window Actions =======
-bindd = $mainMod SHIFT, left, Move active window to the left, movewindow, l
-bindd = $mainMod SHIFT, right, Move active window to the right, movewindow, r
-bindd = $mainMod SHIFT, up, Move active window upwards, movewindow, u
-bindd = $mainMod SHIFT, down, Move active window downwards, movewindow, d
-bindd = $mainMod, left, Move focus to the left, movefocus, l
-bindd = $mainMod, right,  Move focus to the right, movefocus, r
-bindd = $mainMod, up, Move focus upwards, movefocus, u
-bindd = $mainMod, down, Move focus downwards, movefocus, d
-
-bindd = $mainMod CTRL SHIFT, right, Resize to the right, resizeactive, 15 0
-bindd = $mainMod CTRL SHIFT, left, Resize to the left, resizeactive, -15 0
-bindd = $mainMod CTRL SHIFT, up, Resize upwards, resizeactive, 0 -15
-bindd = $mainMod CTRL SHIFT, down, Resize downwards, resizeactive, 0 15
-
-bindd = $mainMod CTRL, 1, Move window and switch to workspace 1, movetoworkspace, 1
-bindd = $mainMod CTRL, 2, Move window and switch to workspace 2, movetoworkspace, 2
-bindd = $mainMod CTRL, 3, Move window and switch to workspace 3, movetoworkspace, 3
-bindd = $mainMod CTRL, 4, Move window and switch to workspace 4, movetoworkspace, 4
-bindd = $mainMod CTRL, 5, Move window and switch to workspace 5, movetoworkspace, 5
-bindd = $mainMod CTRL, 6, Move window and switch to workspace 6, movetoworkspace, 6
-bindd = $mainMod CTRL, 7, Move window and switch to workspace 7, movetoworkspace, 7
-bindd = $mainMod CTRL, 8, Move window and switch to workspace 8, movetoworkspace, 8
-bindd = $mainMod CTRL, 9, Move window and switch to workspace 9, movetoworkspace, 9
-bindd = $mainMod CTRL, 0, Move window and switch to workspace 10, movetoworkspace, 10
-bindd = $mainMod CTRL, left, Move window and switch to the next workspace, movetoworkspace, -1
-bindd = $mainMod CTRL, right, Move window and switch to the previous workspace, movetoworkspace, +1
-
-bindd = $mainMod SHIFT, 1, Move window silently to workspace 1, movetoworkspacesilent, 1
-bindd = $mainMod SHIFT, 2, Move window silently to workspace 2, movetoworkspacesilent, 2
-bindd = $mainMod SHIFT, 3, Move window silently to workspace 3, movetoworkspacesilent, 3
-bindd = $mainMod SHIFT, 4, Move window silently to workspace 4, movetoworkspacesilent, 4
-bindd = $mainMod SHIFT, 5, Move window silently to workspace 5, movetoworkspacesilent, 5
-bindd = $mainMod SHIFT, 6, Move window silently to workspace 6, movetoworkspacesilent, 6
-bindd = $mainMod SHIFT, 7, Move window silently to workspace 7, movetoworkspacesilent, 7
-bindd = $mainMod SHIFT, 8, Move window silently to workspace 8, movetoworkspacesilent, 8
-bindd = $mainMod SHIFT, 9, Move window silently to workspace 9, movetoworkspacesilent, 9
-bindd = $mainMod SHIFT, 0, Move window silently to workspace 10, movetoworkspacesilent, 10
-
-# ======= Workspace Actions =======
-bindd = $mainMod, 1, Switch to workspace 1, workspace, 1
-bindd = $mainMod, 2, Switch to workspace 2, workspace, 2
-bindd = $mainMod, 3, Switch to workspace 3, workspace, 3
-bindd = $mainMod, 4, Switch to workspace 4, workspace, 4
-bindd = $mainMod, 5, Switch to workspace 5, workspace, 5
-bindd = $mainMod, 6, Switch to workspace 6, workspace, 6
-bindd = $mainMod, 7, Switch to workspace 7, workspace, 7
-bindd = $mainMod, 8, Switch to workspace 8, workspace, 8
-bindd = $mainMod, 9, Switch to workspace 9, workspace, 9
-bindd = $mainMod, 0, Switch to workspace 10, workspace, 10
-
-binds {
-    allow_workspace_cycles = 1
-    workspace_back_and_forth = 1
-    workspace_center_on = 1
-    movefocus_cycles_fullscreen = true
-    window_direction_monitor_fallback = true
-}
-
-xwayland {
-    force_zero_scaling = true
-}
-
-# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-# ┃                    Variables Configuration                  ┃
-# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-general {
-    gaps_in = 1
-    gaps_out = 1
-    border_size = 2
-    col.active_border = $cachylgreen
-    col.inactive_border = $cachymblue
-    layout = dwindle
-    snap {
-        enabled = true
+-- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+-- ┃                      Input Configuration                    ┃
+-- ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+hl.config({
+    input = {
+        follow_mouse = 2,
+        float_switch_override_focus = 2,
     }
-}
+})
 
-cursor {
-    no_hardware_cursors = 0
-    use_cpu_buffer = 2
-}
+-- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+-- ┃                         Keybinds                            ┃
+-- ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd(terminal), { description = "Opens your preferred terminal emulator (" .. terminal .. ")" })
+hl.bind(mainMod .. " + W", hl.dsp.exec_cmd(scaling .. " brave --disable-features=WaylandWpColorManagerV1"), { description = "Opens Brave" })
+hl.bind(mainMod .. " + S", hl.dsp.exec_cmd("env LD_PRELOAD=/usr/lib/spotify-adblock.so " .. scaling .. " spotify --uri=%U"), { description = "Opens Spotify" })
+hl.bind(mainMod .. " + G", hl.dsp.exec_cmd(scaling .. " steam"), { description = "Opens Steam" })
+hl.bind(mainMod .. " + D", hl.dsp.exec_cmd(scaling .. " discordcanary"), { description = "Opens Discord" })
+hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd("killall waybar && waybar & disown"), { description = "Reloads hyprland and waybar" })
+hl.bind(mainMod .. " + Q", hl.dsp.window.close(), { description = "Closes (not kill) current window" })
+hl.bind(mainMod .. " + Tab", hl.dsp.exec_cmd(applauncher), { description = "Runs your application launcher" })
+hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ action = "toggle" }), { description = "Toggles current window fullscreen mode" })
 
-group {
-    col.border_active = $cachydgreen
-    col.border_inactive = $cachylgreen
-    col.border_locked_active = $cachymgreen
-    col.border_locked_inactive = $cachydblue
-    groupbar {
-        font_family = "Fira Sans"
-        text_color = $cachydblue
-        col.active = $cachydgreen
-        col.inactive = $cachylgreen
-        col.locked_active = $cachymgreen
-        col.locked_inactive = $cachydblue
-    }
-}
+-- ======= Volume Control (Unified: Laptop Style) =======
+hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_SINK@ 5%+"), { repeating = true, locked = true })
+hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_SINK@ 5%-"), { repeating = true, locked = true })
+hl.bind("XF86AudioMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_SINK@ toggle"), { repeating = true, locked = true })
 
-misc {
-    font_family = "Fira Sans"
-    splash_font_family = "Fira Sans"
-    disable_hyprland_logo = true
-    disable_splash_rendering = true
-    col.splash = $cachylgreen
-    background_color = $cachydblue
-    enable_swallow = true
-    swallow_regex = ^(cachy-browser|firefox|nautilus|nemo|thunar|btrfs-assistant.)$
-    focus_on_activate = true
-}
+-- ======= Screen Brightness (Unified: PC Style - 5%) =======
+hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl s +5%"), { repeating = true, locked = true })
+hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl s 5%-"), { repeating = true, locked = true })
 
-debug {
-    vfr = true
-}
+-- ======= Window Actions =======
+hl.bind(mainMod .. " + SHIFT + left", hl.dsp.window.move({ direction = "left" }), { description = "Move active window to the left" })
+hl.bind(mainMod .. " + SHIFT + right", hl.dsp.window.move({ direction = "right" }), { description = "Move active window to the right" })
+hl.bind(mainMod .. " + SHIFT + up", hl.dsp.window.move({ direction = "up" }), { description = "Move active window upwards" })
+hl.bind(mainMod .. " + SHIFT + down", hl.dsp.window.move({ direction = "down" }), { description = "Move active window downwards" })
 
-render {
-   cm_enabled = true
-   send_content_type = true
-   new_render_scheduling = true
-   direct_scanout = 2
-   non_shader_cm = 1
-   cm_auto_hdr = 1
-   cm_sdr_eotf = "gamma22force"
-}
+hl.bind(mainMod .. " + left", hl.dsp.focus({ direction = "left" }), { description = "Move focus to the left" })
+hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }), { description = "Move focus to the right" })
+hl.bind(mainMod .. " + up", hl.dsp.focus({ direction = "up" }), { description = "Move focus upwards" })
+hl.bind(mainMod .. " + down", hl.dsp.focus({ direction = "down" }), { description = "Move focus downwards" })
 
-quirks {
-   prefer_hdr = true
-}
+hl.bind(mainMod .. " + CTRL + SHIFT + right", hl.dsp.window.resize({ x = 15, y = 0, relative = true }), { description = "Resize to the right" })
+hl.bind(mainMod .. " + CTRL + SHIFT + left", hl.dsp.window.resize({ x = -15, y = 0, relative = true }), { description = "Resize to the left" })
+hl.bind(mainMod .. " + CTRL + SHIFT + up", hl.dsp.window.resize({ x = 0, y = -15, relative = true }), { description = "Resize upwards" })
+hl.bind(mainMod .. " + CTRL + SHIFT + down", hl.dsp.window.resize({ x = 0, y = 15, relative = true }), { description = "Resize downwards" })
 
-dwindle {
-    special_scale_factor = 0.8
-    preserve_split = true
-}
+-- Workspaces 1-10 Binds (Dynamic Loops)
+for i = 1, 10 do
+    local key = tostring(i % 10)
+    -- Switch to workspace i
+    hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }), { description = "Switch to workspace " .. i })
+    -- Move window and switch to workspace i
+    hl.bind(mainMod .. " + CTRL + " .. key, hl.dsp.window.move({ workspace = i, follow = true }), { description = "Move window and switch to workspace " .. i })
+    -- Move window silently to workspace i
+    hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i, follow = false }), { description = "Move window silently to workspace " .. i })
+end
 
-master {
-    new_status = master
-    special_scale_factor = 0.8
-}
+hl.bind(mainMod .. " + CTRL + left", hl.dsp.window.move({ workspace = "-1", follow = true }), { description = "Move window and switch to the next workspace" })
+hl.bind(mainMod .. " + CTRL + right", hl.dsp.window.move({ workspace = "+1", follow = true }), { description = "Move window and switch to the previous workspace" })
 
-# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-# ┃                    Windowrules Configuration                ┃
-# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-windowrule = match:class ^Rofi$, float on
-windowrule = match:class ^org\.pulseaudio\.pavucontrol$, float on
-windowrule = match:title ^Picture in picture$, float on
-windowrule = match:title ^Save File$, float on
-windowrule = match:title ^Open File$, float on
-windowrule = match:class ^LibreWolf$, match:title ^Picture-in-Picture$, float on
-windowrule = match:class ^blueman-manager$, float on
-windowrule = match:class ^(xdg-desktop-portal-gtk|xdg-desktop-portal-kde|xdg-desktop-portal-hyprland).*$, float on
-windowrule = match:class ^(polkit-gnome-authentication-agent-1|hyprpolkitagent|org\.kde\.polkit-kde-authentication-agent-1).*$, float on
-windowrule = match:class ^CachyOSHello$, float on
-windowrule = match:class ^zenity$, float on
-windowrule = match:title ^Steam - Self Updater$, float on
+hl.config({
+    binds = {
+        allow_workspace_cycles = 1,
+        workspace_back_and_forth = 1,
+        workspace_center_on = 1,
+        movefocus_cycles_fullscreen = true,
+        window_direction_monitor_fallback = true,
+    },
+    xwayland = {
+        force_zero_scaling = true,
+    },
+    general = {
+        gaps_in = 1,
+        gaps_out = 1,
+        border_size = 2,
+        col = {
+            active_border = cachylgreen,
+            inactive_border = cachymblue,
+        },
+        layout = "dwindle",
+        snap = {
+            enabled = true,
+        },
+    },
+    cursor = {
+        no_hardware_cursors = 0,
+        use_cpu_buffer = 2,
+    },
+    group = {
+        col = {
+            border_active = cachydgreen,
+            border_inactive = cachylgreen,
+            border_locked_active = cachymgreen,
+            border_locked_inactive = cachydblue,
+        },
+        groupbar = {
+            font_family = "Fira Sans",
+            text_color = cachydblue,
+            col = {
+                active = cachydgreen,
+                inactive = cachylgreen,
+                locked_active = cachymgreen,
+                locked_inactive = cachydblue,
+            },
+        },
+    },
+    misc = {
+        font_family = "Fira Sans",
+        splash_font_family = "Fira Sans",
+        disable_hyprland_logo = true,
+        disable_splash_rendering = true,
+        col = {
+            splash = cachylgreen,
+        },
+        background_color = cachydblue,
+        enable_swallow = true,
+        swallow_regex = "^(cachy-browser|firefox|nautilus|nemo|thunar|btrfs-assistant.)$",
+        focus_on_activate = true,
+    },
+    debug = {
+        vfr = true,
+    },
+    render = {
+        cm_enabled = true,
+        send_content_type = true,
+        new_render_scheduling = true,
+        direct_scanout = 2,
+        non_shader_cm = 1,
+        cm_auto_hdr = 1,
+        cm_sdr_eotf = "gamma22force",
+    },
+    quirks = {
+        prefer_hdr = true,
+    },
+    dwindle = {
+        special_scale_factor = 0.8,
+        preserve_split = true,
+    },
+    master = {
+        new_status = "master",
+        special_scale_factor = 0.8,
+    },
+    ecosystem = {
+        no_update_news = true,
+    },
+})
 
-windowrule = match:class ^(thunar|nemo)$, opacity 1.0 override
-windowrule = match:class ^(discord|armcord|webcord)$, opacity 1.0 override
-windowrule = match:title ^(QQ|Telegram)$, opacity 1.0 override
-windowrule = match:title ^NetEase Cloud Music Gtk4$, opacity 1.0 override
+-- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+-- ┃                    Windowrules Configuration                ┃
+-- ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+hl.window_rule({ match = { class = "^Rofi$" }, float = true })
+hl.window_rule({ match = { class = "^org\\.pulseaudio\\.pavucontrol$" }, float = true })
+hl.window_rule({ match = { title = "^Picture in picture$" }, float = true })
+hl.window_rule({ match = { title = "^Save File$" }, float = true })
+hl.window_rule({ match = { title = "^Open File$" }, float = true })
+hl.window_rule({ match = { class = "^LibreWolf$", title = "^Picture-in-Picture$" }, float = true })
+hl.window_rule({ match = { class = "^blueman-manager$" }, float = true })
+hl.window_rule({ match = { class = "^(xdg-desktop-portal-gtk|xdg-desktop-portal-kde|xdg-desktop-portal-hyprland).*$" }, float = true })
+hl.window_rule({ match = { class = "^(polkit-gnome-authentication-agent-1|hyprpolkitagent|org\\.kde\\.polkit-kde-authentication-agent-1).*$" }, float = true })
+hl.window_rule({ match = { class = "^CachyOSHello$" }, float = true })
+hl.window_rule({ match = { class = "^zenity$" }, float = true })
+hl.window_rule({ match = { title = "^Steam - Self Updater$" }, float = true })
 
-windowrule = match:title ^Picture-in-Picture$, float on
-windowrule = match:title ^Picture-in-Picture$, size 960 540
-windowrule = match:title ^Picture-in-Picture$, move 25%- 0
-windowrule = match:title ^(imv|mpv|danmufloat|termfloat|nemo|ncmpcpp)$, float on
-windowrule = match:title ^(imv|mpv|danmufloat|termfloat|nemo|ncmpcpp)$, move 25%- 0
-windowrule = match:title ^(imv|mpv|danmufloat|termfloat|nemo|ncmpcpp)$, size 960 540
-windowrule = match:title ^danmufloat$, pin on
-windowrule = match:title ^(danmufloat|termfloat)$, rounding 5
+hl.window_rule({ match = { class = "^(thunar|nemo)$" }, opacity = "1.0 override" })
+hl.window_rule({ match = { class = "^(discord|armcord|webcord)$" }, opacity = "1.0 override" })
+hl.window_rule({ match = { title = "^(QQ|Telegram)$" }, opacity = "1.0 override" })
+hl.window_rule({ match = { title = "^NetEase Cloud Music Gtk4$" }, opacity = "1.0 override" })
 
-windowrule = match:class ^(kitty|Alacritty)$, animation slide right
-windowrule = match:class ^org\.mozilla\.firefox$, no_blur on
+hl.window_rule({ match = { title = "^Picture-in-Picture$" }, float = true })
+hl.window_rule({ match = { title = "^Picture-in-Picture$" }, size = { 960, 540 } })
+hl.window_rule({ match = { title = "^Picture-in-Picture$" }, move = { "25%-", "0" } })
 
-windowrule = match:float true, match:workspace w[fv1-10], border_size 2
-windowrule = match:float true, match:workspace w[fv1-10], border_color $cachylblue
-windowrule = match:float true, match:workspace w[fv1-10], rounding 8
+hl.window_rule({ match = { title = "^(imv|mpv|danmufloat|termfloat|nemo|ncmpcpp)$" }, float = true })
+hl.window_rule({ match = { title = "^(imv|mpv|danmufloat|termfloat|nemo|ncmpcpp)$" }, move = { "25%-", "0" } })
+hl.window_rule({ match = { title = "^(imv|mpv|danmufloat|termfloat|nemo|ncmpcpp)$" }, size = { 960, 540 } })
 
-windowrule = match:float false, match:workspace f[1-10], border_size 3
-windowrule = match:float false, match:workspace f[1-10], rounding 4
+hl.window_rule({ match = { title = "^danmufloat$" }, pin = true })
+hl.window_rule({ match = { title = "^(danmufloat|termfloat)$" }, rounding = 5 })
 
-workspace = w[tv1-10], gapsout:5, gapsin:3
-workspace = f[1], gapsout:5, gapsin:3
+hl.window_rule({ match = { class = "^(kitty|Alacritty)$" }, animation = "slide right" })
+hl.window_rule({ match = { class = "^org\\.mozilla\\.firefox$" }, no_blur = true })
 
-layerrule = match:namespace ^logout_dialog$, animation slide top
-layerrule = match:namespace ^waybar$, animation slide down
-layerrule = match:namespace ^wallpaper$, animation fade 50%
+hl.window_rule({ match = { float = true, workspace = "w[fv1-10]" }, border_size = 2 })
+hl.window_rule({ match = { float = true, workspace = "w[fv1-10]" }, border_color = cachylblue })
+hl.window_rule({ match = { float = true, workspace = "w[fv1-10]" }, rounding = 8 })
 
-ecosystem:no_update_news = true    
-      '';
+hl.window_rule({ match = { float = false, workspace = "f[1-10]" }, border_size = 3 })
+hl.window_rule({ match = { float = false, workspace = "f[1-10]" }, rounding = 4 })
+
+-- Workspace rules
+hl.workspace_rule({ workspace = "w[tv1-10]", gaps_out = 5, gaps_in = 3 })
+hl.workspace_rule({ workspace = "f[1]", gaps_out = 5, gaps_in = 3 })
+
+-- Layer rules
+hl.layer_rule({ match = { namespace = "^logout_dialog$" }, animation = "slide top" })
+hl.layer_rule({ match = { namespace = "^waybar$" }, animation = "slide down" })
+hl.layer_rule({ match = { namespace = "^wallpaper$" }, animation = "fade 50%" })
+        '';
         force = true;
       };
     };

@@ -59,12 +59,12 @@ sigmoid-upscaling=yes
 
 target-colorspace-hint=yes
 target-colorspace-hint-mode=source
-target-prim=bt.2020
+#target-prim=bt.2020
 tone-mapping=hable
 hdr-compute-peak=yes
 hdr-peak-percentile=100
 target-peak=auto
-target-trc=pq
+#target-trc=pq
 
 ############################
 # PROFILES

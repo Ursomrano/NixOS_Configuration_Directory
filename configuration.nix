@@ -42,12 +42,13 @@ in
   boot = {
   	loader = {
 		systemd-boot.enable = false;
-		systemd-boot.configurationLimit = 5;
+		systemd-boot.configurationLimit = 3;
 		grub = {
 			enable = true;
 			device = "nodev";
 			efiSupport = true;
 			useOSProber = true;
+			configurationLimit = 3;
 		};
 		efi.canTouchEfiVariables = true;
 		efi.efiSysMountPoint = "/boot";
@@ -255,7 +256,7 @@ in
 	nodejs
 	rustc
 	cargo
-	gemini-cli
+	antigravity-cli
 	valgrind-light
 	flac
 	rsgain
