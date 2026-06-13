@@ -12,13 +12,14 @@ in
 
   config = mkIf config.hyprland.shared.enable {
     home-manager.users.${user}.home.file = {
-      ".config/hypr/hyprland.lua" = {
+      ".config/hypr/shared.lua" = {
         text = ''
 -- ┃                 CachyOS Hyprland Shared Config              ┃
 
 mainMod = "SUPER"
 applauncher = "wofi --show run,drun"
 terminal = "alacritty"
+scaling = scaling or ""
 
 -- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 -- ┃                    Animations Configuration                 ┃

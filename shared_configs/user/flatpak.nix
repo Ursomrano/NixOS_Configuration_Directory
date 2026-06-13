@@ -1,7 +1,10 @@
 { config, pkgs, ... }:
 let
   grep = pkgs.gnugrep;
-  desiredFlatpaks = [ "com.fightcade.Fightcade" ];
+  desiredFlatpaks = [ 
+  	"com.fightcade.Fightcade"
+	"com.bambulab.BambuStudio"
+  ];
 in {
   system.userActivationScripts.flatpakManagement = {
   	text = ''

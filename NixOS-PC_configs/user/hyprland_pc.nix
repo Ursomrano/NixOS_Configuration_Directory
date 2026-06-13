@@ -8,7 +8,7 @@ in
     hyprland.shared.enable = config.hyprland.enableUserConfig;
 
     home-manager.users.${user}.home.file = lib.mkIf config.hyprland.enableUserConfig {
-      ".config/hypr/pc.lua".text = ''
+      ".config/hypr/hyprland.lua".text = ''
 -- ┃                 CachyOS Hyprland PC Config                  ┃
 
 -- --- Hardware Specific Defaults ---
