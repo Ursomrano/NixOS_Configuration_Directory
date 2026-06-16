@@ -33,6 +33,7 @@ in
       ./shared_configs/user/hyprpaper.nix
       ./shared_configs/user/mpv.nix
       ./shared_configs/user/pipewire.nix
+      ./shared_configs/user/waydroid_symfonium.nix
       ./shared_configs/user/wlogout/wlogout.nix
 
       <home-manager/nixos>
@@ -124,6 +125,7 @@ in
     layout = "us";
     variant = "";
   };
+  services.colord.enable = true;
   services.blueman.enable = true;
   services.resolved.enable = true;
   services.flatpak.enable = true;
@@ -256,7 +258,7 @@ in
 	nodejs
 	rustc
 	cargo
-	antigravity-cli
+	opencode
 	valgrind-light
 	flac
 	rsgain
@@ -284,9 +286,10 @@ in
   	libnotify
   	pavucontrol
 	brightnessctl
-	grim
-	slurp
-	swappy
+  	grim
+  	slurp
+  	swappy
+	wl-clipboard
 	fcitx5
 	blueman
 

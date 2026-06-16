@@ -5,6 +5,7 @@ let
   	"com.fightcade.Fightcade"
 	"com.bambulab.BambuStudio"
   ];
+  desiredFlatpaksStr = builtins.concatStringsSep " " desiredFlatpaks;
 in {
   system.userActivationScripts.flatpakManagement = {
   	text = ''
@@ -15,14 +16,14 @@ in {
     			installedFlatpaks=$(flatpak list --app --columns=application)
 
     		for installed in $installedFlatpaks; do
-      			if ! echo "com.fightcade.Fightcade" \
+      			if ! echo "${desiredFlatpaksStr}" \
 			| ${pkgs.gnugrep}/bin/grep -q $installed; then
         			echo "Removing $installed because it's not in the desiredFlatpaks list."
         			flatpak uninstall -y --noninteractive $installed
       			fi
     		done
 
-    		for app in com.fightcade.Fightcade; do
+    		for app in ${desiredFlatpaksStr}; do
       			echo "Ensuring $app is installed."
       			flatpak install -y --noninteractive flathub $app || true
     		done

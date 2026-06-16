@@ -224,9 +224,9 @@ hl.config({
         send_content_type = true,
         new_render_scheduling = true,
         direct_scanout = 2,
-        non_shader_cm = 1,
-        cm_auto_hdr = 1,
-        cm_sdr_eotf = "gamma22force",
+        non_shader_cm = 0,
+        cm_auto_hdr = 0,
+        cm_sdr_eotf = "spline",
     },
     quirks = {
         prefer_hdr = true,
