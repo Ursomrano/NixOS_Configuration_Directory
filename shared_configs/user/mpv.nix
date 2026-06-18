@@ -76,6 +76,7 @@ audio-buffer=1.0
 pipewire-buffer=64
 video=auto
 image-display-duration=inf
+replaygain=album
 
 [movie]
 video-sync=display-resample
