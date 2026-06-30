@@ -115,16 +115,20 @@ with lib;
     ];
 
     # PRINTER
-    services.printing.enable = true;
+    services.printing = {
+	enable = true;
+	browsed.enable=false;
+    };
     services.avahi = {
       enable = true;
       nssmdns4 = true;
       openFirewall = true;
     };
-    services.ipp-usb.enable = true;
+    services.ipp-usb.enable = false;
     services.printing.drivers = [
       pkgs.cups-filters
-      pkgs.cups-browsed
+      #pkgs.cups-browsed
+      pkgs.canon-cups-ufr2
     ];
   };
 }

@@ -65,7 +65,7 @@ in
 		enable = true;
 		dates = "weekly";
 		operation = "switch";
-		allowReboot = true;
+		allowReboot = false;
 	};
   	stateVersion = "26.11";
   };
@@ -320,6 +320,7 @@ in
 	qbittorrent
 	nicotine-plus
 	proton-vpn
+	zoom-us
 
   	# --- Gaming / launchers ---
   	prismlauncher
