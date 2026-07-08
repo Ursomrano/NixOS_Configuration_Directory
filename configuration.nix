@@ -332,7 +332,7 @@ in
     		set -euf
     		nixos-rebuild boot --upgrade
     		nix-store --optimise -v
-    		nix-collect-garbage -d
+     		nix-collect-garbage
   	'')
   ];
   environment.sessionVariables.NIXOS_OZONE_WL = "1";

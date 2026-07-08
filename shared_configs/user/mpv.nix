@@ -35,7 +35,6 @@ interpolation=no
 ############################
 ao=pipewire
 audio-device=pipewire
-audio-normalize-downmix=no
 
 # Slightly larger buffer to prevent pops on 4K120 HDR HDMI
 audio-buffer=0.3
@@ -70,6 +69,8 @@ target-peak=auto
 ############################
 
 [music]
+audio-channels=stereo
+audio-normalize-downmix=yes
 hwdec=no
 video-sync=audio
 audio-buffer=1.0
@@ -81,6 +82,7 @@ replaygain=album
 [movie]
 video-sync=display-resample
 audio-buffer=0.5
+audio-normalize-downmix=no
     '';
     ".config/mpv/mpv.conf".force = true;
     };
