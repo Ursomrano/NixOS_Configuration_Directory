@@ -109,7 +109,7 @@ hl.config({
 -- ┃                         Keybinds                            ┃
 -- ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd(terminal), { description = "Opens your preferred terminal emulator (" .. terminal .. ")" })
-hl.bind(mainMod .. " + W", hl.dsp.exec_cmd(scaling .. " brave --disable-features=WaylandWpColorManagerV1"), { description = "Opens Brave" })
+hl.bind(mainMod .. " + W", hl.dsp.exec_cmd(scaling .. "MOZ_ENABLE_WAYLAND=1 zen"), { description = "Opens Zen" })
 hl.bind(mainMod .. " + S", hl.dsp.exec_cmd("env LD_PRELOAD=/usr/lib/spotify-adblock.so " .. scaling .. " spotify --uri=%U"), { description = "Opens Spotify" })
 hl.bind(mainMod .. " + G", hl.dsp.exec_cmd(scaling .. " steam"), { description = "Opens Steam" })
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd(scaling .. " discordcanary"), { description = "Opens Discord" })

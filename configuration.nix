@@ -9,6 +9,8 @@ let
     config.allowUnfree = true;
   };
   pkgs = unstable;
+  flake = repo: import ./shared_configs/flake-helper.nix pkgs repo "master";
+  flakeBranch = repo: branch: import ./shared_configs/flake-helper.nix pkgs repo branch;
   host = "HOSTNAME_PLACEHOLDER";
   hostIcon = if host == "NixOS-Laptop" then " " else "󰇅";
 in
@@ -19,7 +21,6 @@ in
       # --- Host-specific system config ---
       ./${host}_configs/default.nix
       ./${host}_configs/hardware-configuration.nix
-
       # --- Host-specific user tweaks ---
       # ./${host}_configs/user/hyprland.nix
       (if host == "NixOS-Laptop" then ./NixOS-Laptop_configs/user/hyprland_laptop.nix else ./NixOS-PC_configs/user/hyprland_pc.nix)
@@ -35,6 +36,7 @@ in
       ./shared_configs/user/pipewire.nix
       ./shared_configs/user/waydroid_symfonium.nix
       ./shared_configs/user/wlogout/wlogout.nix
+
 
       <home-manager/nixos>
     ];
@@ -325,6 +327,9 @@ in
   	# --- Gaming / launchers ---
   	prismlauncher
 	sidequest
+
+  	# --- Flake-sourced packages ---
+  	(flake "youwen5/zen-browser-flake")
 
   	# --- Custom system maintenance ---
   	(writeShellScriptBin "nixos-update" ''
