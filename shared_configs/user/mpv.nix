@@ -78,6 +78,12 @@ pipewire-buffer=64
 video=auto
 image-display-duration=inf
 replaygain=album
+hdr-compute-peak=no
+target-colorspace-hint=no
+target-peak=auto
+tone-mapping=clip
+vo=gpu-next
+gpu-api=vulkan
 
 [movie]
 video-sync=display-resample
