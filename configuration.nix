@@ -9,8 +9,8 @@ let
     config.allowUnfree = true;
   };
   pkgs = unstable;
-  flake = repo: import ./shared_configs/flake-helper.nix pkgs repo "master";
-  flakeBranch = repo: branch: import ./shared_configs/flake-helper.nix pkgs repo branch;
+  flakeLib = import ./shared_configs/flake-helper.nix pkgs;
+  inherit (flakeLib) flake flakeBranch flakeSubpath;
   host = "HOSTNAME_PLACEHOLDER";
   hostIcon = if host == "NixOS-Laptop" then " " else "󰇅";
 in
@@ -317,7 +317,6 @@ in
 	
 
   	# --- Networked / online applications ---
-	brave
   	discord-canary
 	qbittorrent
 	nicotine-plus
@@ -330,6 +329,7 @@ in
 
   	# --- Flake-sourced packages ---
   	(flake "youwen5/zen-browser-flake")
+	(flakeSubpath "Rishabh5321/custom-packages-flake" "packages" "thorium-avx2")
 
   	# --- Custom system maintenance ---
   	(writeShellScriptBin "nixos-update" ''
