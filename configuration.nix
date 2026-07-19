@@ -317,6 +317,7 @@ in
 	
 
   	# --- Networked / online applications ---
+	onlyoffice-desktopeditors
   	discord-canary
 	qbittorrent
 	nicotine-plus
