@@ -266,6 +266,8 @@ in
 	rsgain
 	sox
 	p7zip
+	verilator
+	yosys
 
 	# --- LSP/Language Servers/Dictionaries ---
 	bash-language-server
