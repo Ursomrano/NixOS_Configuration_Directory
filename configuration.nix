@@ -283,9 +283,10 @@ in
   	svls
 	hunspellDicts.en_US
 
-  	# --- Graphics stack / compositor ---
-  	hyprland
-  	hyprpaper
+	# --- Graphics stack / compositor ---
+	hyprland
+	hyprpaper
+	nvidia-vaapi-driver
 
   	# --- Desktop environment components ---
   	waybar
@@ -347,7 +348,10 @@ in
      		nix-collect-garbage
   	'')
   ];
-  environment.sessionVariables.NIXOS_OZONE_WL = "1";
+  environment.sessionVariables = {
+    NIXOS_OZONE_WL = "1";
+    LIBVA_DRIVER_NAME = "nvidia";
+  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
