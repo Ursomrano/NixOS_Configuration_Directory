@@ -14,12 +14,15 @@ with lib;
     networking.hostName = "NixOS-Laptop";
     nix.settings.max-jobs = 4;
 
+    environment.sessionVariables.LIBVA_DRIVER_NAME = "iHD";
+
     # GPU CONFIG
     services.xserver.videoDrivers = [ "modesetting" "nvidia" ];
     hardware= {
     	graphics = {
 		enable = true;
 		enable32Bit = true;
+		extraPackages = with pkgs; [ intel-media-driver ];
 	};
     	nvidia = {
       		modesetting.enable = true;
@@ -30,6 +33,7 @@ with lib;
       		powerManagement.finegrained = true;
       		nvidiaPersistenced = true;
       		dynamicBoost.enable = true;
+      		videoAcceleration = true;
 
       		package = config.boot.kernelPackages.nvidiaPackages.latest;
 

@@ -286,7 +286,6 @@ in
 	# --- Graphics stack / compositor ---
 	hyprland
 	hyprpaper
-	nvidia-vaapi-driver
 
   	# --- Desktop environment components ---
   	waybar
@@ -350,7 +349,6 @@ in
   ];
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
-    LIBVA_DRIVER_NAME = "nvidia";
   };
 
   # Some programs need SUID wrappers, can be configured further or are

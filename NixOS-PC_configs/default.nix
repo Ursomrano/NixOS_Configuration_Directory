@@ -11,7 +11,10 @@ with lib;
   	};
 
 	config = mkIf config.PC.enable {
-    		networking.hostName = "NixOS-PC";
+     		networking.hostName = "NixOS-PC";
+
+		environment.sessionVariables.LIBVA_DRIVER_NAME = "nvidia";
+
 
     		# X server and Nvidia settings
     		services.xserver= {
@@ -24,6 +27,7 @@ with lib;
       				nvidiaSettings = true;
 				nvidiaPersistenced = true;
       				package = config.boot.kernelPackages.nvidiaPackages.latest;
+				videoAcceleration = true;
 			};
 			graphics = {
 				enable = true;
