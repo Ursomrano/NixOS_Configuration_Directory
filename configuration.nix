@@ -166,6 +166,10 @@ in
 	gc = {
 		automatic = true;
 		dates = "daily";
+		# Prune old generations so old kernels/initrds get cleaned
+		# out of /boot instead of accumulating until it overflows.
+		# Keeps the current generation + 2 previous ones for rollback.
+		options = "--delete-generations +3";
 	};
   };
 
