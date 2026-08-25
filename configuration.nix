@@ -130,6 +130,7 @@ in
   services.blueman.enable = true;
   services.resolved.enable = true;
   services.flatpak.enable = true;
+  services.udisks2.enable = true;
   #user and auto login
   # services.getty.autologinUser = "ursomrano71";
   services.seatd.enable = false;
@@ -149,6 +150,7 @@ in
   services.pulseaudio.enable = false;
 
   security.rtkit.enable = true;
+  security.polkit.enable = true;
 
   # Allow unfree packages
   nixpkgs.config = {
@@ -282,9 +284,10 @@ in
   	svls
 	hunspellDicts.en_US
 
-	# --- Graphics stack / compositor ---
-	hyprland
-	hyprpaper
+  	# --- Graphics stack / compositor ---
+  	hyprland
+  	hyprpaper
+  	hyprpolkitagent
 
   	# --- Desktop environment components ---
   	waybar
@@ -312,8 +315,9 @@ in
   	fastfetch
 	dolphin-emu
 	
-  	# --- File management ---
-  	thunar
+   	# --- File management ---
+   	thunar
+	udisks2
 
   	# --- Media / runtime compatibility ---
   	wine
