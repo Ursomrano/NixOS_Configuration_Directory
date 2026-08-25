@@ -34,7 +34,6 @@ in
       ./shared_configs/user/hyprpaper.nix
       ./shared_configs/user/mpv.nix
       ./shared_configs/user/pipewire.nix
-      ./shared_configs/user/waydroid_symfonium.nix
       ./shared_configs/user/wlogout/wlogout.nix
 
 
