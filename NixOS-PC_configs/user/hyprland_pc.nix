@@ -43,7 +43,7 @@ hl.env("GDK_SCALE", "1")
 hl.env("GDK_DPI_SCALE", "1")
 
 -- --- Keybinds (Hardware Specific) ---
-hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd(capturing), { description = "Screen capture selection" })
+hl.bind(mainMod .. " + F3", hl.dsp.exec_cmd(capturing), { description = "Screen capture selection" })
       '';
       ".config/hypr/hyprland.lua".force = true;
     };

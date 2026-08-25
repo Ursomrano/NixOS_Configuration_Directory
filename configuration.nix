@@ -221,7 +221,7 @@ in
 	nixpkgs.config.allowUnfree = true;
 	systemd.user.startServices = "sd-switch";
 	home.packages = with pkgs; [
-		libreoffice-fresh
+		libreoffice-stable
 		tetris
 		_2048-in-terminal
 	];
@@ -320,7 +320,7 @@ in
   	wine
 	wine64
   	mpv
-	
+	fooyin
 
   	# --- Networked / online applications ---
 	onlyoffice-desktopeditors
