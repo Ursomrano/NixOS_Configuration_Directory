@@ -317,11 +317,11 @@ in
 	
    	# --- File management ---
    	thunar
+	tumbler
 	udisks2
 
   	# --- Media / runtime compatibility ---
-  	wine
-	wine64
+	wineWow64Packages.stable
   	mpv
 	fooyin
 
