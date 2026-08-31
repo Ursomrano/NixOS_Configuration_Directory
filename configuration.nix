@@ -106,7 +106,7 @@ in
     isNormalUser = true;
     shell = pkgs.zsh;
     description = "Ursomrano71";
-    extraGroups = [ "networkmanager" "wheel" "input" "plugdev"];
+    extraGroups = [ "networkmanager" "wheel" "input" "plugdev" "dialout"];
     packages = with pkgs; [];
   };
 
@@ -308,6 +308,7 @@ in
   	neovim
 	obs-studio
 	blender
+	arduino-ide
 
   	# --- System info / performance / gaming helpers ---
   	gamemode
