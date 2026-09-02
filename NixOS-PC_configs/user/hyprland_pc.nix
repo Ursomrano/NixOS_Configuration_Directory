@@ -43,6 +43,7 @@ hl.env("GDK_SCALE", "1")
 hl.env("GDK_DPI_SCALE", "1")
 
 -- --- Keybinds (Hardware Specific) ---
+hl.bind(mainMod .. " + M", hl.dsp.exec_cmd(scaling .. " udisksctl mount -b /dev/sdb1 -o uid=1000,gid=100,dmask=0022,fmask=0133 || true; fooyin"), { description = "Mounts /dev/sdb1 and opens Fooyin" })
 hl.bind(mainMod .. " + F3", hl.dsp.exec_cmd(capturing), { description = "Screen capture selection" })
       '';
       ".config/hypr/hyprland.lua".force = true;

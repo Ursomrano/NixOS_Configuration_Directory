@@ -42,6 +42,7 @@ hl.monitor({
 hl.env("GDK_SCALE", "2.72134")
 
 -- --- Keybinds (Hardware Specific) ---
+hl.bind(mainMod .. " + M", hl.dsp.exec_cmd(scaling .. " udisksctl mount -b /dev/nvme0n1p1 -o uid=1000,gid=100,dmask=0022,fmask=0133 || udisksctl mount -b /dev/sda1 -o uid=1000,gid=100,dmask=0022,fmask=0133 || true; fooyin"), { description = "Mounts nvme/sda1 and opens Fooyin" })
 hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd(capturing), { description = "Screen capture selection" })
       '';
       ".config/hypr/hyprland.lua".force = true;
