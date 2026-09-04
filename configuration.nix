@@ -130,6 +130,7 @@ in
   services.blueman.enable = true;
   services.resolved.enable = true;
   services.flatpak.enable = true;
+  xdg.portal.enable = true;
   services.udisks2.enable = true;
   #user and auto login
   # services.getty.autologinUser = "ursomrano71";
@@ -353,6 +354,8 @@ in
   ];
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
+    XDG_CURRENT_DESKTOP = "Hyprland";
+    XDG_SESSION_TYPE = "wayland";
   };
 
   # Some programs need SUID wrappers, can be configured further or are
