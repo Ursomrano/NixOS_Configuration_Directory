@@ -137,7 +137,7 @@ in
   services.seatd.enable = false;
   services.greetd = {
 	enable = true;
-	settings.default_session.command = "start-hyprland";
+	settings.default_session.command = "start-hyprland 2>&1 | tee /home/ursomrano71/.local/state/hyprland-boot.log";
 	settings.default_session.user = "ursomrano71";
   };
   #audio

@@ -183,7 +183,7 @@ hl.config({
         },
     },
     cursor = {
-        no_hardware_cursors = 0,
+        no_hardware_cursors = 1,
         use_cpu_buffer = 2,
     },
     group = {
