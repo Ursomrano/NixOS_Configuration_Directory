@@ -19,8 +19,10 @@ capturing = "timestamp=$(date +'%Y-%m-%d_%H-%M-%S') ; grim -g \"$(slurp)\" \"$HO
 require("shared")
 
 -- --- Hardware Specific Monitor ---
+-- Catch-all rule (blank output): matches whichever way the GPU names the
+-- connector (it renumbers it between boots), keeping HDR/280Hz consistent.
 hl.monitor({
-    output = "DP-1",
+    output = "",
     mode = "2560x1440@280",
     position = "0x0",
     scale = 1,
