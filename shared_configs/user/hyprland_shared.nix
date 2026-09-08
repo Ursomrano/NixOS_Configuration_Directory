@@ -49,7 +49,7 @@ hl.on("hyprland.start", function ()
     hl.exec_cmd("mako &")
     hl.exec_cmd("/home/ursomrano71/Documents/Programs/Shell/backup_script.sh")
     hl.exec_cmd("hyprctl setcursor Bibata-Modern-Ice 24")
-    hl.exec_cmd("cp -f /run/user/1000/hypr/*/hyprland.log ~/.local/state/hyprland-run-$(date +%Y%m%d-%H%M%S).log; while true; do cp -f /run/user/1000/hypr/*/hyprland.log ~/.local/state/hyprland-live.log 2>/dev/null; sleep 10; done &")
+    hl.exec_cmd("for d in /run/user/1000/hypr/*/; do break; done; sess=$(basename \"$d\"); cp -f /run/user/1000/hypr/*/hyprland.log ~/.local/state/hyprland-run-$(date +%Y%m%d-%H%M%S).log; while true; do cp -f /run/user/1000/hypr/*/hyprland.log ~/.local/state/hyprland-live-$sess.log 2>/dev/null; sleep 10; done &")
     hl.exec_cmd("systemctl --user import-environment &")
     hl.exec_cmd("hash dbus-update-activation-environment 2>/dev/null &")
     hl.exec_cmd("dbus-update-activation-environment --systemd &")
@@ -220,6 +220,7 @@ hl.config({
     },
     debug = {
         vfr = true,
+        enable_stdout_logs = true,
     },
     render = {
         cm_enabled = true,

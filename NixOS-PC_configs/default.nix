@@ -11,22 +11,20 @@ with lib;
   	};
 
 	config = mkIf config.PC.enable {
-     		networking.hostName = "NixOS-PC";
-
+    networking.hostName = "NixOS-PC";
 		environment.sessionVariables.LIBVA_DRIVER_NAME = "nvidia";
 
-
-    		# X server and Nvidia settings
-    		services.xserver= {
+    # X server and Nvidia settings
+    services.xserver= {
 			videoDrivers = [ "nvidia" "modesetting"];
 		};
 		hardware = {
 			nvidia = {
-				open = false;
+				open = true;
 				modesetting.enable = true;
-      				nvidiaSettings = true;
+      	nvidiaSettings = true;
 				nvidiaPersistenced = true;
-      				package = config.boot.kernelPackages.nvidiaPackages.latest;
+      	package = config.boot.kernelPackages.nvidiaPackages.beta;
 				videoAcceleration = true;
 			};
 			graphics = {
@@ -35,12 +33,12 @@ with lib;
 			};
 		};
     		# Kernel modules for initrd
-    		boot = {
-    			initrd.availableKernelModules = [ "thunderbolt" "ucsi_acpi" "typec" ];
+    boot = {
+    	initrd.availableKernelModules = [ "thunderbolt" "ucsi_acpi" "typec" ];
 			kernelParams = [
-  				"usbcore.autosuspend=-1"
-  				"nvidia_drm.modeset=1"
-  				"amd_pstate=active"
+  			"usbcore.autosuspend=-1"
+  			"nvidia_drm.modeset=1"
+  			"amd_pstate=active"
 			];		
 		};	
 	};
