@@ -24,7 +24,7 @@ with lib;
 				modesetting.enable = true;
       	nvidiaSettings = true;
 				nvidiaPersistenced = true;
-      	package = config.boot.kernelPackages.nvidiaPackages.beta;
+      	package = config.boot.kernelPackages.nvidiaPackages.latest;
 				videoAcceleration = true;
 			};
 			graphics = {
