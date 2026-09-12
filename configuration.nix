@@ -137,10 +137,11 @@ in
   services.seatd.enable = false;
   services.greetd = {
 	enable = true;
-	# PC: graphical session chooser (regreet) to pick Hyprland or MangoWM at boot.
-	# Laptop: auto-start straight into Hyprland.
-	settings.default_session.command = if host == "NixOS-PC" then "${pkgs.regreet}/bin/regreet" else "start-hyprland 2>&1 | tee /home/ursomrano71/.local/state/hyprland-boot-$(date +%Y%m%d-%H%M%S).log";
-	settings.default_session.user = if host == "NixOS-PC" then "greeter" else "ursomrano71";
+	# Boot into UWSM's own compositor selector (whiptail menu) so Hyprland
+	# or MangoWM can be picked at boot on both machines, and every option
+	# runs under UWSM instead of a bare start-hyprland.
+	settings.default_session.command = "${pkgs.uwsm}/bin/uwsm start select";
+	settings.default_session.user = "ursomrano71";
   };
   #audio
   services.pipewire = {
@@ -194,7 +195,23 @@ in
 
   programs = {
   	nix-ld.enable = true;
-  	hyprland = {enable = true; xwayland.enable = true; withUWSM = true;};
+  	hyprland = {
+		enable = true;
+		xwayland.enable = true;
+		withUWSM = true;
+		# The package already ships hyprland.desktop, which UWSM's
+		# `start select` wraps in its own units. Drop the redundant
+		# hyprland-uwsm.desktop so the selector doesn't offer a "Hyprland
+		# (uwsm-managed)" option that would nest an uwsm inside uwsm.
+		package = pkgs.hyprland.overrideAttrs (o: {
+			postInstall = (o.postInstall or "") + ''
+				rm -f $out/share/wayland-sessions/hyprland-uwsm.desktop
+			'';
+			passthru = (o.passthru or {}) // {
+				providedSessions = [ "hyprland" ];
+			};
+		});
+	};
 	zsh = {
 		enable = true;
 		autosuggestions.enable = true;
@@ -287,10 +304,12 @@ in
   	svls
 	hunspellDicts.en_US
 
-  	# --- Graphics stack / compositor ---
-  	hyprland
-  	hyprpaper
-  	hyprpolkitagent
+# --- Graphics stack / compositor ---
+	hyprland
+	hyprpaper
+	hyprpolkitagent
+	# UWSM's interactive compositor selector is a whiptail menu
+	newt
 
   	# --- Desktop environment components ---
   	waybar
