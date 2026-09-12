@@ -137,8 +137,10 @@ in
   services.seatd.enable = false;
   services.greetd = {
 	enable = true;
-	settings.default_session.command = "start-hyprland 2>&1 | tee /home/ursomrano71/.local/state/hyprland-boot-$(date +%Y%m%d-%H%M%S).log";
-	settings.default_session.user = "ursomrano71";
+	# PC: graphical session chooser (regreet) to pick Hyprland or MangoWM at boot.
+	# Laptop: auto-start straight into Hyprland.
+	settings.default_session.command = if host == "NixOS-PC" then "${pkgs.regreet}/bin/regreet" else "start-hyprland 2>&1 | tee /home/ursomrano71/.local/state/hyprland-boot-$(date +%Y%m%d-%H%M%S).log";
+	settings.default_session.user = if host == "NixOS-PC" then "greeter" else "ursomrano71";
   };
   #audio
   services.pipewire = {
