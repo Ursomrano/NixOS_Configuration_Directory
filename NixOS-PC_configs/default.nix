@@ -33,28 +33,5 @@ with lib;
 			};
 		};
 
-		# Add our own wayland-sessions desktop file for MangoWM (with the
-		# Vulkan/scene env prefix) so UWSM's `start select` offers it and
-		# launches mango with HDR-capable rendering. Strip the package's
-		# own mango.desktop so ours wins in the profile merge.
-		environment.systemPackages = with pkgs; [
-			(mango.overrideAttrs (o: {
-				postInstall = (o.postInstall or "") + ''
-				rm -f $out/share/wayland-sessions/mango.desktop
-				'';
-			}))
-			(writeTextDir "share/wayland-sessions/mango.desktop" ''
-			[Desktop Entry]
-			Type=Application
-			Name=MangoWM
-			Comment=Mango Wayland compositor (dwl/wlroots + scenefx)
-			Exec=env WLR_RENDERER=vulkan WLR_SCENE_DISABLE_DIRECT_SCANOUT=1 mango
-			'')
-		];
-
-		home-manager.users.ursomrano71.home.file.".config/mango/config.conf" = {
-			source = ./user/mango.conf;
-			force = true;
-		};
 	};
 }

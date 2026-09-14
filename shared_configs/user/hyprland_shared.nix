@@ -227,12 +227,13 @@ hl.config({
         send_content_type = true,
         new_render_scheduling = true,
         direct_scanout = 2,
-        non_shader_cm = 0,
+        non_shader_cm = 2,
         cm_auto_hdr = 0,
-        cm_sdr_eotf = "spline",
+        cm_sdr_eotf = "default",
     },
     quirks = {
         prefer_hdr = true,
+        skip_non_kms_dmabuf_formats = true,
     },
     dwindle = {
         special_scale_factor = 0.8,
@@ -244,6 +245,9 @@ hl.config({
     },
     ecosystem = {
         no_update_news = true,
+    },
+    experimental = {
+        wp_cm_1_2 = true,
     },
 })
 

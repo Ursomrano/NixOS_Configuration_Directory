@@ -14,7 +14,7 @@
 pkgs:
 let
   parseFlakeRef = ref:
-    let parts = builtins.split "#" ref; in {
+    let parts = builtins.filter (p: ! builtins.isList p) (builtins.split "#" ref); in {
       repo = builtins.head parts;
       pkg = if builtins.length parts > 1 then builtins.elemAt parts 1 else null;
     };

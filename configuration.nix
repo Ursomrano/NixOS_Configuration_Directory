@@ -199,18 +199,9 @@ in
 		enable = true;
 		xwayland.enable = true;
 		withUWSM = true;
-		# The package already ships hyprland.desktop, which UWSM's
-		# `start select` wraps in its own units. Drop the redundant
-		# hyprland-uwsm.desktop so the selector doesn't offer a "Hyprland
-		# (uwsm-managed)" option that would nest an uwsm inside uwsm.
-		package = pkgs.hyprland.overrideAttrs (o: {
-			postInstall = (o.postInstall or "") + ''
-				rm -f $out/share/wayland-sessions/hyprland-uwsm.desktop
-			'';
-			passthru = (o.passthru or {}) // {
-				providedSessions = [ "hyprland" ];
-			};
-		});
+		# Use the stock package so it's substitutable from the binary cache.
+		# The selector will also show a redundant "Hyprland (uwsm-managed)"
+		# entry; both entries run hyprland under UWSM, so it's harmless.
 	};
 	zsh = {
 		enable = true;
@@ -226,7 +217,6 @@ in
    			"PROMPT=$'[%n@ ${hostIcon}]{ %~ }\\n> '"
   		];
 	};
-	waybar.enable = true;
 	steam = {
 		enable = true;
 		remotePlay.openFirewall = true;
@@ -304,11 +294,10 @@ in
   	svls
 	hunspellDicts.en_US
 
-# --- Graphics stack / compositor ---
+	# --- Graphics stack / compositor ---
 	hyprland
 	hyprpaper
 	hyprpolkitagent
-	# UWSM's interactive compositor selector is a whiptail menu
 	newt
 
   	# --- Desktop environment components ---
@@ -362,7 +351,6 @@ in
 
   	# --- Flake-sourced packages ---
   	(flake "youwen5/zen-browser-flake")
-	(flakeSubpath "Rishabh5321/custom-packages-flake" "packages" "thorium-avx2")
 
   	# --- Custom system maintenance ---
   	(writeShellScriptBin "nixos-update" ''
