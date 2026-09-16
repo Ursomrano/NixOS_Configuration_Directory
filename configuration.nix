@@ -8,6 +8,10 @@ let
     system = "x86_64-linux";
     config.allowUnfree = true;
   };
+  stable = import <nixos-stable> {
+    system = "x86_64-linux";
+    config.allowUnfree = true;
+  };
   pkgs = unstable;
   flakeLib = import ./shared_configs/flake-helper.nix pkgs;
   inherit (flakeLib) flake flakeBranch flakeSubpath;
@@ -135,14 +139,7 @@ in
   #user and auto login
   # services.getty.autologinUser = "ursomrano71";
   services.seatd.enable = false;
-  services.greetd = {
-	enable = true;
-	# Boot into UWSM's own compositor selector (whiptail menu) so Hyprland
-	# or MangoWM can be picked at boot on both machines, and every option
-	# runs under UWSM instead of a bare start-hyprland.
-	settings.default_session.command = "${pkgs.uwsm}/bin/uwsm start select";
-	settings.default_session.user = "ursomrano71";
-  };
+  services.greetd = {enable = true;};
   #audio
   services.pipewire = {
 	enable = true;
@@ -275,7 +272,7 @@ in
 	nodejs
 	rustc
 	cargo
-	opencode
+	stable.opencode
 	valgrind-light
 	flac
 	rsgain
@@ -298,7 +295,6 @@ in
 	hyprland
 	hyprpaper
 	hyprpolkitagent
-	newt
 
   	# --- Desktop environment components ---
   	waybar
@@ -325,7 +321,6 @@ in
   	gamemode
   	mangohud
   	fastfetch
-	dolphin-emu
 	
    	# --- File management ---
    	thunar
