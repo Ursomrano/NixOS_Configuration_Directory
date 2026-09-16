@@ -8,17 +8,12 @@ let
     system = "x86_64-linux";
     config.allowUnfree = true;
   };
-  stable = import <nixos-stable> {
-    system = "x86_64-linux";
-    config.allowUnfree = true;
-  };
   pkgs = unstable;
   flakeLib = import ./shared_configs/flake-helper.nix pkgs;
   inherit (flakeLib) flake flakeBranch flakeSubpath;
   host = "HOSTNAME_PLACEHOLDER";
   hostIcon = if host == "NixOS-Laptop" then " " else "󰇅";
 in
-
 {
   imports =
     [
@@ -136,10 +131,15 @@ in
   services.flatpak.enable = true;
   xdg.portal.enable = true;
   services.udisks2.enable = true;
+
   #user and auto login
   # services.getty.autologinUser = "ursomrano71";
   services.seatd.enable = false;
-  services.greetd = {enable = true;};
+  services.greetd = {
+	enable = true;
+	settings.default_session.command = "start-hyprland";
+	settings.default_session.user = "ursomrano71";
+  };  
   #audio
   services.pipewire = {
 	enable = true;
@@ -272,7 +272,7 @@ in
 	nodejs
 	rustc
 	cargo
-	stable.opencode
+	opencode	
 	valgrind-light
 	flac
 	rsgain
