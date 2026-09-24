@@ -86,6 +86,7 @@ with lib;
 
     # USER COMMAND
     environment.systemPackages = [
+      pkgs.bolt
       (pkgs.writeShellScriptBin "laptop-mode" ''
         case "$1" in
           battery)
@@ -103,6 +104,15 @@ with lib;
             ;;
         esac
       '')
+    ];
+
+    # Laptop-only packages
+    home-manager.users.ursomrano71.home.packages = with pkgs; [
+      # Run with: tetris
+      tetris
+      # Run with: 2048
+      _2048-in-terminal
+      arduino-ide
     ];
 
     # KERNEL / BOOT

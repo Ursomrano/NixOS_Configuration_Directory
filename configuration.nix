@@ -230,10 +230,18 @@ in
 	systemd.user.startServices = "sd-switch";
 	home.packages = with pkgs; [
 		libreoffice-stable
-		tetris
-		_2048-in-terminal
 	];
+	home.file = {
+		"Documents/Programs/SystemVerilog/.envrc".text = "use flake /etc/nixos/devshells#systemverilog\n";
+		"Documents/Programs/C++/.envrc".text = "use flake /etc/nixos/devshells#cpp\n";
+		"Documents/Programs/Shell/.envrc".text = "use flake /etc/nixos/devshells#audio\n";
+	};
 	programs = {
+		direnv = {
+			enable = true;
+			nix-direnv.enable = true;
+			enableZshIntegration = true;
+		};
 		home-manager.enable = true;
 		wlogout = {enable = true;};
 		retroarch = {
@@ -256,30 +264,19 @@ in
   	# --- Kernel / scheduling / low-level system ---
   	scx.rustscheds
   	nix-ld
-  	lshw
-  	bolt	
 
   	# --- Toolchain / core utilities ---
   	gcc
 	gnumake
   	git
   	tree
-  	unzip
-	unrar
+	unar
 	mediainfo
-	gparted-full
 	python315
 	nodejs
 	rustc
 	cargo
 	opencode	
-	valgrind-light
-	flac
-	rsgain
-	sox
-	p7zip
-	verilator
-	yosys
 
 	# --- LSP/Language Servers/Dictionaries ---
 	bash-language-server
@@ -288,7 +285,6 @@ in
   	pyright
   	ruff
   	rust-analyzer
-  	svls
 	hunspellDicts.en_US
 
 	# --- Graphics stack / compositor ---
@@ -307,7 +303,6 @@ in
   	slurp
   	swappy
 	wl-clipboard
-	fcitx5
 	blueman
 
   	# --- Terminals / editors ---
@@ -315,7 +310,6 @@ in
   	neovim
 	obs-studio
 	blender
-	arduino-ide
 
   	# --- System info / performance / gaming helpers ---
   	gamemode
@@ -333,16 +327,13 @@ in
 	fooyin
 
   	# --- Networked / online applications ---
-	onlyoffice-desktopeditors
   	discord-canary
 	qbittorrent
 	nicotine-plus
 	proton-vpn
-	zoom-us
 
   	# --- Gaming / launchers ---
   	prismlauncher
-	sidequest
 
   	# --- Flake-sourced packages ---
   	(flake "youwen5/zen-browser-flake")
