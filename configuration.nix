@@ -59,6 +59,18 @@ in
 	blacklistedKernelModules = [];
 	initrd.kernelModules = [ "nvidia" "nvidia_uvm" ];
   };
+
+  # Mount /tmp in RAM.
+  fileSystems."/tmp" = {
+    device = "none";
+    fsType = "tmpfs";
+    options = [ "size=512M" "mode=1777" ];
+  };
+
+  # Don't limit Nix build sandboxes to the 512M /tmp tmpfs. Build them in
+  # /var/tmp instead (on disk; cleaned by systemd-tmpfiles after 30 days).
+  systemd.services.nix-daemon.environment.TMPDIR = "/var/tmp";
+
   # System
   system = {
   	autoUpgrade = {
@@ -234,7 +246,8 @@ in
 	home.file = {
 		"Documents/Programs/SystemVerilog/.envrc".text = "use flake /etc/nixos/devshells#systemverilog\n";
 		"Documents/Programs/C++/.envrc".text = "use flake /etc/nixos/devshells#cpp\n";
-		"Documents/Programs/Shell/.envrc".text = "use flake /etc/nixos/devshells#audio\n";
+  		"Documents/Programs/Shell/.envrc".text = "use flake /etc/nixos/devshells#audio\n";
+  		"Documents/Programs/CUDA/.envrc".text = "use flake /etc/nixos/devshells#cuda\n";
 	};
 	programs = {
 		direnv = {
