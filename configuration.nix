@@ -236,6 +236,8 @@ in
 		];
 	};
   };
+  # Don't hard-fail activation on pre-existing dotfiles; move them to *.backup.
+  home-manager.backupFileExtension = "backup";
   home-manager.users.ursomrano71 = {
   	home.stateVersion = "26.05";
 	nixpkgs.config.allowUnfree = true;
@@ -250,6 +252,9 @@ in
   		"Documents/Programs/CUDA/.envrc".text = "use flake /etc/nixos/devshells#cuda\n";
 	};
 	programs = {
+		# programs.direnv writes its hook via programs.zsh.initExtra, which is
+		# silently dropped unless the zsh module is enabled.
+		zsh.enable = true;
 		direnv = {
 			enable = true;
 			nix-direnv.enable = true;
@@ -357,7 +362,7 @@ in
     		set -euf
     		nixos-rebuild boot --upgrade
     		nix-store --optimise -v
-     		nix-collect-garbage
+     		nix-collect-garbage --delete-older-than 30d
   	'')
   ];
   environment.sessionVariables = {
