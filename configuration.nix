@@ -13,8 +13,9 @@ let
   inherit (flakeLib) flake flakeBranch flakeSubpath;
 
   # --- direnv: per-directory tool lists ---
-  # See directory_packages.nix. Generated .envrc files, so don't hand-edit them.
-  directoryPackages = import ./directory_packages.nix;
+  # See ${host}_configs/user/directory_packages.nix. Generated .envrc files, so
+  # don't hand-edit them.
+  directoryPackages = import ./${host}_configs/user/directory_packages.nix;
 
   # Checked here so a typo fails at activation, not on the next cd. Returns the
   # name unchanged; these are interpolated as text, not as derivations.

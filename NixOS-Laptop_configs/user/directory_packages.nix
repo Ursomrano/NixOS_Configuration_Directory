@@ -10,7 +10,7 @@
 # `flake` emits `use flake <path>` instead, for a pinned devShell (CUDA below).
 # `hook` is extra .envrc lines, and only applies to the `packages` form.
 let
-  cpp = [ "valgrind-light" "sox" "rsgain" "flac" "cmake" "gdb" "ninja" ];
+  cpp = [ "valgrind-light" "cmake" "gdb" "ninja" ];
 in
 {
   "Documents/Programs/C++" = {
@@ -30,8 +30,12 @@ in
   };
 
   # The one directory that needs a pinned flake: cudatoolkit is not in the
-  # binary cache for the nixos channel, so `use nix` would build 7.3 GB from source.
+  # binary cache for the nixos channel, where `use nix` would build 7.3 GB from source.
   "Documents/Programs/CUDA" = {
     flake = "/etc/nixos/cuda-devshell";
+  };
+
+  "Documents/School/Fall2026/CS480" = {
+    packages = cpp;
   };
 }
