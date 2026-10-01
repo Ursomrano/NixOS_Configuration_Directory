@@ -11,6 +11,37 @@ let
   pkgs = unstable;
   flakeLib = import ./shared_configs/flake-helper.nix pkgs;
   inherit (flakeLib) flake flakeBranch flakeSubpath;
+
+  # --- direnv: per-directory tool lists ---
+  # See directory_packages.nix. Generated .envrc files, so don't hand-edit them.
+  directoryPackages = import ./directory_packages.nix;
+
+  # Checked here so a typo fails at activation, not on the next cd. Returns the
+  # name unchanged; these are interpolated as text, not as derivations.
+  checkPkg = name:
+    builtins.seq (pkgs.lib.foldl' (
+      attrs: attr:
+        if attrs ? ${attr} then attrs.${attr}
+        else throw "directory_packages.nix: no nixpkgs attribute '${name}'"
+    ) pkgs (pkgs.lib.splitString "." name)) name;
+
+  # `flake` opts a directory into a pinned devShell (CUDA); `hook` is for extra
+  # .envrc lines a plain package list can't express.
+  mkEnvrc = { packages ? [], flake ? null, hook ? "" }:
+    if flake != null then ''
+      use flake ${flake}
+    ''
+    else ''
+      use nix -p ${pkgs.lib.concatStringsSep " " (map checkPkg packages)}
+      ${hook}
+    '';
+
+  # NB: the key MUST be "<dir>/.envrc". With just "<dir>", home-manager writes
+  # the contents to that path and moves the real directory to *.backup.
+  envrcFiles = pkgs.lib.mapAttrs' (dir: spec: {
+    name = "${dir}/.envrc";
+    value.text = mkEnvrc spec;
+  }) directoryPackages;
   host = "HOSTNAME_PLACEHOLDER";
   hostIcon = if host == "NixOS-Laptop" then " " else "󰇅";
 in
@@ -241,19 +272,16 @@ in
   home-manager.users.ursomrano71 = {
   	home.stateVersion = "26.05";
 	nixpkgs.config.allowUnfree = true;
+	# direnv's `use nix` imports <nixpkgs> itself, so it does not inherit
+	# nixpkgs.config above -- nix reads this user-level file instead.
+	xdg.configFile."nixpkgs/config.nix".text = "{ allowUnfree = true; }\n";
 	systemd.user.startServices = "sd-switch";
 	home.packages = with pkgs; [
 		libreoffice-stable
 	];
-	home.file = {
-		"Documents/Programs/SystemVerilog/.envrc".text = "use flake /etc/nixos/devshells#systemverilog\n";
-		"Documents/Programs/C++/.envrc".text = "use flake /etc/nixos/devshells#cpp\n";
-  		"Documents/Programs/Shell/.envrc".text = "use flake /etc/nixos/devshells#audio\n";
-  		"Documents/Programs/CUDA/.envrc".text = "use flake /etc/nixos/devshells#cuda\n";
-	};
+	home.file = envrcFiles;
 	programs = {
-		# programs.direnv writes its hook via programs.zsh.initExtra, which is
-		# silently dropped unless the zsh module is enabled.
+		# programs.direnv's hook goes via zsh.initExtra, dropped unless zsh is enabled.
 		zsh.enable = true;
 		direnv = {
 			enable = true;
