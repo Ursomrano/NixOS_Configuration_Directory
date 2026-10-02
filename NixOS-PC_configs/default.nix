@@ -33,5 +33,22 @@ with lib;
 			};
 		};
 
+		# 1TB music drive (exFAT "exFAT_Part") for the SUPER+M fooyin keybind. In fstab, not udisksctl:
+		# with no auth agent installed udisks2 hangs forever. By UUID, in-kernel exfat (not the old NTFS /dev/sdb1).
+		boot.kernelModules = [ "exfat" ];
+		fileSystems."/run/media/ursomrano71/exFAT_Part" = {
+			device = "/dev/disk/by-uuid/78E6-E813";
+			fsType = "exfat";
+			options = [
+				"uid=1000"
+				"gid=100"
+				"umask=0022"
+				"users"
+				"nofail"
+				"noatime"
+				"x-systemd.device-timeout=10s"
+			];
+		};
+
 	};
 }

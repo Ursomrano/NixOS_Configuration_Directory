@@ -1,20 +1,36 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
+# Defines what gets installed on this system. See the configuration.nix(5) man
+# page and the NixOS manual (`nixos-help`).
 
 { config, pkgs, ... }:
 let
+  # TEMPORARY -- fooyin 0.13.1 overlay (nixpkgs#565675 unmerged): delete this plus the `overlays`
+  # line once `(import <nixpkgs> {}).fooyin.version` is >= 0.13.1. Must stay here; `pkgs = unstable`.
+  fooyinOverlay =
+    final: prev: {
+      fooyin = prev.fooyin.overrideAttrs (old: {
+        version = "0.13.1";
+        src = final.fetchFromGitHub {
+          owner = "fooyin";
+          repo = "fooyin";
+          tag = "v0.13.1";
+          hash = "sha256-HinvM2lB8CQhYNJjXt5ZVR2cw2hfVpKbtKG0BzmirCs=";
+        };
+        # Audio CD playback/ripping, new in 0.13.0.
+        buildInputs = old.buildInputs ++ [ final.libcdio final.libcdio-paranoia ];
+      });
+    };
+
   unstable = import <nixos> {
     system = "x86_64-linux";
     config.allowUnfree = true;
+    overlays = [ fooyinOverlay ];
   };
   pkgs = unstable;
   flakeLib = import ./shared_configs/flake-helper.nix pkgs;
   inherit (flakeLib) flake flakeBranch flakeSubpath;
 
-  # --- direnv: per-directory tool lists ---
-  # See ${host}_configs/user/directory_packages.nix. Generated .envrc files, so
-  # don't hand-edit them.
+  # --- direnv: per-directory tool lists, see ./${host}_configs/user/directory_packages.nix ---
+  # Generated .envrc files -- don't hand-edit them.
   directoryPackages = import ./${host}_configs/user/directory_packages.nix;
 
   # Checked here so a typo fails at activation, not on the next cd. Returns the
@@ -43,6 +59,31 @@ let
     name = "${dir}/.envrc";
     value.text = mkEnvrc spec;
   }) directoryPackages;
+  # Apple USB SuperDrive (05ac:1500) wake helper: reports no medium until it gets one vendor
+  # SCSI command, `EA 00 00 00 00 00 01`, once per power-on before disc insert. Usage: superdrive-arm 3-3
+  superdriveArm = pkgs.writeShellScript "superdrive-arm" ''
+    set -u
+    usbdev="''${1:-}"
+    sg_raw="${pkgs.sg3_utils}/bin/sg_raw"
+
+    # The scsi host is parented by the USB *interface* (e.g. 3-3:1.0), not by the
+    # USB device itself, so glob the interface nodes.
+    for _ in $(seq 1 30); do
+      for node in /sys/bus/usb/devices/"$usbdev":*/host*/target*/*/block/sr*; do
+        [ -e "$node" ] || continue
+        dev="/dev/$(basename "$node")"
+        if "$sg_raw" "$dev" EA 00 00 00 00 00 01 >/dev/null 2>&1; then
+          echo "superdrive: armed $dev"
+          exit 0
+        fi
+      done
+      sleep 1
+    done
+
+    echo "superdrive: no sr node found for USB device '$usbdev'" >&2
+    exit 1
+  '';
+
   host = "HOSTNAME_PLACEHOLDER";
   hostIcon = if host == "NixOS-Laptop" then " " else "󰇅";
 in
@@ -149,7 +190,7 @@ in
     isNormalUser = true;
     shell = pkgs.zsh;
     description = "Ursomrano71";
-    extraGroups = [ "networkmanager" "wheel" "input" "plugdev" "dialout"];
+    extraGroups = [ "networkmanager" "wheel" "input" "plugdev" "dialout" "cdrom" ];
     packages = with pkgs; [];
   };
 
@@ -212,8 +253,7 @@ in
 	gc = {
 		automatic = true;
 		dates = "daily";
-		# Prune old generations so old kernels/initrds get cleaned
-		# out of /boot instead of accumulating until it overflows.
+		# Prune old generations so old kernels/initrds don't accumulate in /boot.
 		# Keeps the current generation + 2 previous ones for rollback.
 		options = "--delete-generations +3";
 	};
@@ -225,6 +265,22 @@ in
 
   hardware.rtl-sdr.enable=true;
   hardware.xpadneo.enable = true;
+
+  # --- Apple USB SuperDrive ---
+  # Armed once per plug-in/boot; see `superdriveArm` above. udev-triggered, not
+  # RUN+=, so systemd waits for the sr node instead of racing it.
+  systemd.services."superdrive-arm@" = {
+    description = "Arm Apple USB SuperDrive (%i)";
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "${superdriveArm} %i";
+    };
+  };
+
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="05ac", ATTR{idProduct}=="1500", TAG+="systemd", ENV{SYSTEMD_WANTS}+="superdrive-arm@%k.service"
+  '';
 
   fonts.packages = with pkgs; [
 	font-awesome
@@ -240,9 +296,8 @@ in
 		enable = true;
 		xwayland.enable = true;
 		withUWSM = true;
-		# Use the stock package so it's substitutable from the binary cache.
-		# The selector will also show a redundant "Hyprland (uwsm-managed)"
-		# entry; both entries run hyprland under UWSM, so it's harmless.
+		# Stock package so it's substitutable from the binary cache. The selector also
+		# shows a redundant "Hyprland (uwsm-managed)" entry; both run under UWSM.
 	};
 	zsh = {
 		enable = true;
@@ -319,6 +374,7 @@ in
   	tree
 	unar
 	mediainfo
+	sg3_utils
 	python315
 	nodejs
 	rustc
@@ -419,13 +475,6 @@ in
   # Or disable the firewall altogether.
   #networking.firewall.enable = false;
 
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
+  # Release this system was installed on: sets defaults for stateful data (file
+  # locations, db versions). Read `man configuration.nix` before changing it.
 }

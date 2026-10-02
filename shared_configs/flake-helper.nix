@@ -1,16 +1,5 @@
-# Pull a package from a GitHub repo tarball.
-#
-# Returns an attrset of helpers: { flake, flakeBranch, flakeSubpath }
-#
-# Usage in configuration.nix:
-#   flakeLib = import ./shared_configs/flake-helper.nix pkgs;
-#   inherit (flakeLib) flake flakeBranch flakeSubpath;
-#
-#   (flake "user/repo")                    -- master branch, auto-detect package
-#   (flake "user/repo#pkg-name")           -- master branch, select specific package
-#   (flakeBranch "user/repo" "main")       -- custom branch, auto-detect package
-#   (flakeBranch "user/repo#pkg" "main")   -- custom branch, select specific package
-#   (flakeSubpath "user/repo" "packages" "pkg") -- subdirectory + package name
+# GitHub tarball helpers, { flake, flakeBranch, flakeSubpath }. Usage:
+#   flakeLib = import ./shared_configs/flake-helper.nix pkgs;  then (flake "u/r[#pkg]"), (flakeBranch "u/r[#pkg]" "main"), (flakeSubpath "u/r" "sub" "pkg")
 pkgs:
 let
   parseFlakeRef = ref:
