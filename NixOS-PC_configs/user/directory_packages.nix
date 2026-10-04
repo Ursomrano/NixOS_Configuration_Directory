@@ -2,7 +2,7 @@
 # "<path>" = { packages = [<nixpkgs attr paths as strings, never derivations>]; hook = "..."; } | { flake = "<path>"; }
 let
   cpp = [ "valgrind-light" "cmake" "gdb" "ninja" ];
-  media = ["sox" "rsgain" "flac"];
+  media = ["sox" "rsgain" "flac" "ffmpeg"];
 in
 {
   "Documents/Programs/C++" = {

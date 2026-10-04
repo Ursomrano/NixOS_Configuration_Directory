@@ -50,5 +50,9 @@ with lib;
 			];
 		};
 
+		# PC-only packages
+		home-manager.users.ursomrano71.home.packages = with pkgs; [
+			whipper
+		];
 	};
 }
