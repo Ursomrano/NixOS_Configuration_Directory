@@ -222,7 +222,7 @@ in
   services.seatd.enable = false;
   services.greetd = {
 	enable = true;
-	settings.default_session.command = "start-hyprland";
+	settings.default_session.command = "${pkgs.uwsm}/bin/uwsm start -e -D Hyprland /run/current-system/sw/share/wayland-sessions/hyprland.desktop";
 	settings.default_session.user = "ursomrano71";
   };  
   #audio
@@ -454,6 +454,8 @@ in
     NIXOS_OZONE_WL = "1";
     XDG_CURRENT_DESKTOP = "Hyprland";
     XDG_SESSION_TYPE = "wayland";
+    # Let apps (notably OBS's NVENC/QuickSync/VAAPI) find the driver libraries.
+    LD_LIBRARY_PATH = [ "/run/opengl-driver/lib" ];
   };
 
   # Some programs need SUID wrappers, can be configured further or are
