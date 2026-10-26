@@ -3,27 +3,9 @@
 
 { config, pkgs, ... }:
 let
-  # TEMPORARY -- fooyin 0.13.1 overlay (nixpkgs#565675 unmerged): delete this plus the `overlays`
-  # line once `(import <nixpkgs> {}).fooyin.version` is >= 0.13.1. Must stay here; `pkgs = unstable`.
-  fooyinOverlay =
-    final: prev: {
-      fooyin = prev.fooyin.overrideAttrs (old: {
-        version = "0.13.1";
-        src = final.fetchFromGitHub {
-          owner = "fooyin";
-          repo = "fooyin";
-          tag = "v0.13.1";
-          hash = "sha256-HinvM2lB8CQhYNJjXt5ZVR2cw2hfVpKbtKG0BzmirCs=";
-        };
-        # Audio CD playback/ripping, new in 0.13.0.
-        buildInputs = old.buildInputs ++ [ final.libcdio final.libcdio-paranoia ];
-      });
-    };
-
   unstable = import <nixos> {
     system = "x86_64-linux";
     config.allowUnfree = true;
-    overlays = [ fooyinOverlay ];
   };
   pkgs = unstable;
   flakeLib = import ./shared_configs/flake-helper.nix pkgs;
@@ -86,6 +68,39 @@ let
 
   host = "HOSTNAME_PLACEHOLDER";
   hostIcon = if host == "NixOS-Laptop" then " " else "󰇅";
+
+  blenderEglVendor =
+    if host == "NixOS-Laptop"
+    then "/run/opengl-driver/share/glvnd/egl_vendor.d/50_mesa.json"
+    else "/run/opengl-driver/share/glvnd/egl_vendor.d/10_nvidia.json";
+
+  blenderOpenGL = pkgs.writeShellScript "blender-opengl" ''
+    export __GL_SHADER_DISK_CACHE=1
+    export __GL_SHADER_DISK_CACHE_SKIP_CLEANUP=1
+    export __GL_THREADED_OPTIMIZATIONS=1
+    if [ -e ${blenderEglVendor} ]; then
+      export __EGL_VENDOR_LIBRARY_FILENAMES=${blenderEglVendor}
+    fi
+    exec ${pkgs.gamemode}/bin/gamemoderun ${pkgs.blender}/bin/blender --gpu-backend opengl "$@"
+  '';
+
+  blenderWrapper = pkgs.symlinkJoin {
+    name = "blender-opengl-${pkgs.blender.version}";
+    paths = [ pkgs.blender ];
+    postBuild = ''
+      rm $out/bin/blender
+      cp ${blenderOpenGL} $out/bin/blender
+      chmod +x $out/bin/blender
+      cp --remove-destination ${pkgs.blender}/share/applications/blender.desktop $out/share/applications/blender.desktop
+      chmod u+w $out/share/applications/blender.desktop
+      substituteInPlace $out/share/applications/blender.desktop \
+        --replace 'PrefersNonDefaultGPU=true' 'PrefersNonDefaultGPU=false'
+    '';
+  };
+
+  blenderVulkan = pkgs.writeShellScriptBin "blender-vulkan" ''
+    exec ${pkgs.blender}/bin/blender --gpu-backend vulkan "$@"
+  '';
 in
 {
   imports =
@@ -144,11 +159,35 @@ in
   # /var/tmp instead (on disk; cleaned by systemd-tmpfiles after 30 days).
   systemd.services.nix-daemon.environment.TMPDIR = "/var/tmp";
 
+  # A crash-looping helper (nvidia-smi spat out ~24k cores) shouldn't be able
+  # to fill the disk; systemd-coredump vacuums old dumps above this.
+  systemd.coredump.settings.Coredump.MaxUse = "128M";
+
+  # Keep the bar alive: waybar's PulseAudio backend aborts with an uncaught
+  # exception when pipewire is restarted underneath it (e.g. during a switch).
+  systemd.user.services.waybar = {
+    description = "Waybar";
+    partOf = [ "graphical-session.target" ];
+    after = [ "graphical-session.target" ];
+    wantedBy = [ "graphical-session.target" ];
+    serviceConfig = {
+      ExecStart = "${pkgs.waybar}/bin/waybar";
+      Restart = "on-failure";
+      RestartSec = 2;
+    };
+  };
+
   # System
   system = {
   	autoUpgrade = {
 		enable = true;
-		dates = "weekly";
+		# "weekly" resolves to Mon 00:00; with Persistent=true the missed run
+		# fires on the first boot of the week, dragging a full nixos-rebuild
+		# (several GB of nix-build) into the login. Run at a quiet hour and
+		# skip the week instead of catching up at boot.
+		dates = "Sun 04:00";
+		randomizedDelaySec = "1h";
+		persistent = false;
 		operation = "switch";
 		allowReboot = false;
 	};
@@ -412,7 +451,8 @@ in
   	alacritty
   	neovim
 	obs-studio
-	blender
+	blenderWrapper
+	blenderVulkan
 
   	# --- System info / performance / gaming helpers ---
   	gamemode

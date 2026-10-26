@@ -43,7 +43,7 @@ hl.animation({ leaf = "workspacesOut", enabled = true, speed = 6, bezier = "over
 -- ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 hl.on("hyprland.start", function ()
     hl.exec_cmd("/home/ursomrano71/Documents/Programs/Shell/random_wallpapers.sh")
-    hl.exec_cmd("waybar")
+    hl.exec_cmd("systemctl --user start waybar.service")
     hl.exec_cmd("hyprpolkitagent &")
     hl.exec_cmd("fcitx5 -d &")
     hl.exec_cmd("mako &")
@@ -115,7 +115,7 @@ hl.bind(mainMod .. " + W", hl.dsp.exec_cmd(scaling .. "MOZ_ENABLE_WAYLAND=1 zen"
 hl.bind(mainMod .. " + S", hl.dsp.exec_cmd("env LD_PRELOAD=/usr/lib/spotify-adblock.so " .. scaling .. " spotify --uri=%U"), { description = "Opens Spotify" })
 hl.bind(mainMod .. " + G", hl.dsp.exec_cmd(scaling .. " steam"), { description = "Opens Steam" })
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd(scaling .. " discordcanary"), { description = "Opens Discord" })
-hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd("killall waybar && waybar & disown"), { description = "Reloads hyprland and waybar" })
+hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd("systemctl --user restart waybar.service"), { description = "Reloads hyprland and waybar" })
 hl.bind(mainMod .. " + Q", hl.dsp.window.close(), { description = "Closes (not kill) current window" })
 hl.bind(mainMod .. " + Tab", hl.dsp.exec_cmd(applauncher), { description = "Runs your application launcher" })
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ action = "toggle" }), { description = "Toggles current window fullscreen mode" })
