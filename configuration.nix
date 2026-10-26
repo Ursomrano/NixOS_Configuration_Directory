@@ -165,11 +165,21 @@ in
 
   # Keep the bar alive: waybar's PulseAudio backend aborts with an uncaught
   # exception when pipewire is restarted underneath it (e.g. during a switch).
+  #
+  # NixOS gives user units a minimal default PATH (coreutils, findutils, grep,
+  # sed, systemd). Waybar spawns `on-click` through `sh -c` and inherits it, so
+  # every click action that isn't an absolute path -- wlogout, wofi, pavucontrol,
+  # wl-copy, ip -- failed with "command not found". Hand the unit the same
+  # profile dirs a normal login session has.
   systemd.user.services.waybar = {
     description = "Waybar";
     partOf = [ "graphical-session.target" ];
     after = [ "graphical-session.target" ];
     wantedBy = [ "graphical-session.target" ];
+    path = [
+      "/run/current-system/sw"
+      config.home-manager.users.ursomrano71.home.profileDirectory
+    ];
     serviceConfig = {
       ExecStart = "${pkgs.waybar}/bin/waybar";
       Restart = "on-failure";
@@ -458,6 +468,7 @@ in
   	gamemode
   	mangohud
   	fastfetch
+  	btop # waybar memory module on-click
 	
    	# --- File management ---
    	thunar
