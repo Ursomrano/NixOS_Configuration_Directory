@@ -111,7 +111,9 @@ in
 	"format": "󱤓  {}%",
 	"max-length": 13,
 	"min-length": 13,
-	"exec": "nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits"
+	// Absolute path: the systemd user unit starts waybar with a minimal
+	// PATH that does not include /run/current-system/sw/bin.
+	"exec": "/run/current-system/sw/bin/nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits"
     },
 
     "cpu": {
