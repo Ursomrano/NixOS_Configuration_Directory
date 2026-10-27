@@ -172,7 +172,7 @@ in
   # wl-copy, ip -- failed with "command not found". Hand the unit the same
   # profile dirs a normal login session has.
   systemd.user.services.waybar = {
-    description = "Waybar";
+    description = "Waybar";    
     partOf = [ "graphical-session.target" ];
     after = [ "graphical-session.target" ];
     wantedBy = [ "graphical-session.target" ];
@@ -265,6 +265,18 @@ in
   services.flatpak.enable = true;
   xdg.portal.enable = true;
   services.udisks2.enable = true;
+  services.ollama = {
+  	enable = true;
+  	package = pkgs.ollama-cuda;
+  	loadModels =
+      if host == "NixOS-Laptop"
+      then [ "qwen3.5:9b" ]
+      else [ "qwen3-coder:30b" ];
+  	environmentVariables = {
+    		OLLAMA_CONTEXT_LENGTH =
+        if host == "NixOS-Laptop" then "16384" else "32768";
+  	};
+  };
 
   #user and auto login
   # services.getty.autologinUser = "ursomrano71";
@@ -428,7 +440,7 @@ in
 	nodejs
 	rustc
 	cargo
-	opencode	
+	opencode
 
 	# --- LSP/Language Servers/Dictionaries ---
 	bash-language-server
