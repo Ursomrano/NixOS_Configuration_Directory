@@ -12,7 +12,10 @@ with lib;
   config = mkIf config.laptop.enable {
 
     networking.hostName = "NixOS-Laptop";
-    nix.settings.max-jobs = 4;
+    nix.settings = {
+    	max-jobs = 2;
+	cores = 3;
+    };
 
     environment.sessionVariables.LIBVA_DRIVER_NAME = "iHD";
 
@@ -30,7 +33,7 @@ with lib;
       		nvidiaSettings = true;
 
       		powerManagement.enable = true;
-      		powerManagement.finegrained = true;
+      		powerManagement.finegrained = false; #true
       		nvidiaPersistenced = true;
       		dynamicBoost.enable = true;
       		videoAcceleration = true;
@@ -110,7 +113,7 @@ with lib;
     home-manager.users.ursomrano71.home.packages = with pkgs; [
       # Run with: tetris
       tetris
-      # Run with: 2048
+      # Run with: 2048-in-terminal
       _2048-in-terminal
       arduino-ide
     ];

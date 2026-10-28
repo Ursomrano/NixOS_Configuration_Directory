@@ -217,16 +217,16 @@ let
 
   # Services
   services.scx.scheduler = "scx_bpfland";
-  systemd.services.bpfland = {
-  	description = "Attach bpfland scheduler";
-  	after = [ "network.target" ];
- 	wantedBy = [ "multi-user.target" ];
-  	serviceConfig = {
-    		Type = "simple";
-   	 	ExecStart = "${pkgs.scx.rustscheds}/bin/scx_bpfland";
-    		Restart = "always";
-  	};
-  };
+  #systemd.services.bpfland = {
+  	#description = "Attach bpfland scheduler";
+  	#after = [ "network.target" ];
+ 	#wantedBy = [ "multi-user.target" ];
+  	#serviceConfig = {
+    		#Type = "simple";
+   	 	#ExecStart = "${pkgs.scx.rustscheds}/bin/scx_bpfland";
+    		#Restart = "always";
+  	#};
+  #};
   services.xserver.xkb = {
     layout = "us";
     variant = "";
@@ -452,15 +452,8 @@ let
   	alacritty
   	neovim
 	obs-studio
-	(blender.overrideAttrs (oldAttrs: {
-  		nativeBuildInputs = (oldAttrs.nativeBuildInputs or []) ++ [ pkgs.makeWrapper ];
-  		postFixup = (oldAttrs.postFixup or "") + ''
-    			wrapProgram $out/bin/blender \
-      			--set WAYLAND_DISPLAY 0
-  		'';
-	}))
 
-  	# --- System info / performance / gaming helpers ---
+	# --- System info / performance / gaming helpers ---
   	gamemode
   	mangohud
   	fastfetch

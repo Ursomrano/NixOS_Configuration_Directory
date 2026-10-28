@@ -54,5 +54,14 @@ with lib;
 		home-manager.users.ursomrano71.home.packages = with pkgs; [
 			whipper
 		];
+		environment.systemPackages = [
+  			(pkgs.blender.overrideAttrs (oldAttrs: {
+    			nativeBuildInputs = (oldAttrs.nativeBuildInputs or []) ++ [ pkgs.makeWrapper ];
+    				postFixup = (oldAttrs.postFixup or "") + ''
+      					wrapProgram $out/bin/blender \
+        				--set WAYLAND_DISPLAY 0
+    				'';
+  			}))
+		];
 	};
 }
