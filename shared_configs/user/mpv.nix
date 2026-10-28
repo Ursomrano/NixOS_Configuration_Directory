@@ -12,7 +12,7 @@ in
     };
   };
 
-  config = lib.mkIf config.mpv.enableUserConfig { 
+  config = lib.mkIf config.mpv.enableUserConfig {
     # Deploy the full mpv.conf
     home-manager.users.${user}.home.file = {
     ".config/mpv/mpv.conf".text = ''
@@ -56,23 +56,32 @@ dvd-device=/dev/sr0
 # HDR / COLOR
 ############################
 
-target-colorspace-hint=yes
-icc-profile-auto=yes
-tone-mapping=hable
+# SDR by default: don't switch the Wayland surface to PQ/BT.2020 for SDR
+# video, so Hyprland's own SDR handling (sdrsaturation etc.) still applies.
+# The [hdr] auto-profile below turns the hint on for real HDR sources only.
+target-colorspace-hint=no
+tone-mapping=bt.2390
 hdr-compute-peak=yes
-hdr-peak-percentile=100
-target-peak=auto
-
+hdr-peak-percentile=95
+# target-peak intentionally unset: mpv uses the 400 nits Hyprland reports
 
 ############################
 # PROFILES
 ############################
 
+# Auto-profile: applies only to HDR (PQ/HLG) sources. It sets nothing but the
+# colorspace hint, so it stacks freely with [animated], [live_action], etc.
+[hdr]
+profile-desc=Signal HDR output only for PQ/HLG sources
+profile-cond=p["video-params/gamma"] == "pq" or p["video-params/gamma"] == "hlg"
+profile-restore=copy
+target-colorspace-hint=yes
+
 [music]
 audio-channels=stereo
 audio-normalize-downmix=yes
 hwdec=no
-video-sync=audio
+video-sync=display-resample
 audio-buffer=1.0
 pipewire-buffer=64
 video=auto

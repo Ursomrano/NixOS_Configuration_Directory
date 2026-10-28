@@ -6,6 +6,7 @@ let
   unstable = import <nixos> {
     system = "x86_64-linux";
     config.allowUnfree = true;
+    config.cudaSupport = true;
   };
   pkgs = unstable;
   flakeLib = import ./shared_configs/flake-helper.nix pkgs;
@@ -66,42 +67,13 @@ let
     exit 1
   '';
 
+  nixcordSrc = builtins.fetchTarball "https://github.com/4evy/nixcord/archive/main.tar.gz";
+  nixcord = import nixcordSrc { inherit pkgs; };
+
   host = "HOSTNAME_PLACEHOLDER";
   hostIcon = if host == "NixOS-Laptop" then " " else "󰇅";
 
-  blenderEglVendor =
-    if host == "NixOS-Laptop"
-    then "/run/opengl-driver/share/glvnd/egl_vendor.d/50_mesa.json"
-    else "/run/opengl-driver/share/glvnd/egl_vendor.d/10_nvidia.json";
-
-  blenderOpenGL = pkgs.writeShellScript "blender-opengl" ''
-    export __GL_SHADER_DISK_CACHE=1
-    export __GL_SHADER_DISK_CACHE_SKIP_CLEANUP=1
-    export __GL_THREADED_OPTIMIZATIONS=1
-    if [ -e ${blenderEglVendor} ]; then
-      export __EGL_VENDOR_LIBRARY_FILENAMES=${blenderEglVendor}
-    fi
-    exec ${pkgs.gamemode}/bin/gamemoderun ${pkgs.blender}/bin/blender --gpu-backend opengl "$@"
-  '';
-
-  blenderWrapper = pkgs.symlinkJoin {
-    name = "blender-opengl-${pkgs.blender.version}";
-    paths = [ pkgs.blender ];
-    postBuild = ''
-      rm $out/bin/blender
-      cp ${blenderOpenGL} $out/bin/blender
-      chmod +x $out/bin/blender
-      cp --remove-destination ${pkgs.blender}/share/applications/blender.desktop $out/share/applications/blender.desktop
-      chmod u+w $out/share/applications/blender.desktop
-      substituteInPlace $out/share/applications/blender.desktop \
-        --replace 'PrefersNonDefaultGPU=true' 'PrefersNonDefaultGPU=false'
-    '';
-  };
-
-  blenderVulkan = pkgs.writeShellScriptBin "blender-vulkan" ''
-    exec ${pkgs.blender}/bin/blender --gpu-backend vulkan "$@"
-  '';
-in
+  in
 {
   imports =
     [
@@ -123,8 +95,8 @@ in
       ./shared_configs/user/pipewire.nix
       ./shared_configs/user/wlogout/wlogout.nix
 
-
       <home-manager/nixos>
+      nixcord.nixosModules.nixcord
     ];
 
   # Boot and Kernel.
@@ -383,6 +355,13 @@ in
 			proton-ge-bin
 		];
 	};
+	nixcord = {
+		enable = true;
+		user = "ursomrano71";
+		discord = {
+			equicord.enable = true;
+		};
+	};
   };
   # Don't hard-fail activation on pre-existing dotfiles; move them to *.backup.
   home-manager.backupFileExtension = "backup";
@@ -473,14 +452,19 @@ in
   	alacritty
   	neovim
 	obs-studio
-	blenderWrapper
-	blenderVulkan
+	(blender.overrideAttrs (oldAttrs: {
+  		nativeBuildInputs = (oldAttrs.nativeBuildInputs or []) ++ [ pkgs.makeWrapper ];
+  		postFixup = (oldAttrs.postFixup or "") + ''
+    			wrapProgram $out/bin/blender \
+      			--set WAYLAND_DISPLAY 0
+  		'';
+	}))
 
   	# --- System info / performance / gaming helpers ---
   	gamemode
   	mangohud
   	fastfetch
-  	btop # waybar memory module on-click
+  	btop 
 	
    	# --- File management ---
    	thunar
@@ -493,7 +477,6 @@ in
 	fooyin
 
   	# --- Networked / online applications ---
-  	discord-canary
 	qbittorrent
 	nicotine-plus
 	proton-vpn
