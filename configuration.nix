@@ -216,17 +216,10 @@ let
   };
 
   # Services
-  services.scx.scheduler = "scx_bpfland";
-  #systemd.services.bpfland = {
-  	#description = "Attach bpfland scheduler";
-  	#after = [ "network.target" ];
- 	#wantedBy = [ "multi-user.target" ];
-  	#serviceConfig = {
-    		#Type = "simple";
-   	 	#ExecStart = "${pkgs.scx.rustscheds}/bin/scx_bpfland";
-    		#Restart = "always";
-  	#};
-  #};
+  services.scx = {
+  	enable = true;
+  	scheduler = "scx_bpfland";
+  };
   services.xserver.xkb = {
     layout = "us";
     variant = "";
