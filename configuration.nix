@@ -457,7 +457,7 @@ let
   	mangohud
   	fastfetch
   	btop
-	nvtop
+	nvtopPackages.nvidia
 	
    	# --- File management ---
    	thunar
