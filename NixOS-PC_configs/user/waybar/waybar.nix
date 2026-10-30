@@ -114,7 +114,7 @@ in
 	// Absolute path: the systemd user unit starts waybar with a minimal
 	// PATH that does not include /run/current-system/sw/bin.
 	"exec": "/run/current-system/sw/bin/nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits",
-	"on-click": "allacritty -e nvtop"
+	"on-click": "alacritty -e nvtop"
     },
 
     "cpu": {
