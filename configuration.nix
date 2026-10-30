@@ -349,13 +349,19 @@ let
 		];
 	};
 	nixcord = {
-		enable = true;
-		user = "ursomrano71";
-		discord = {
-			equicord.enable = true;
-		};
-	};
-  };
+  		enable = true;
+  		user = "ursomrano71";
+  		config = {
+    			themeLinks = [ "https://refact0r.github.io/system24/build/system24.css" ];
+  		};
+  		extraConfig = {
+    			enabledThemeLinks = [ "https://refact0r.github.io/system24/build/system24.css" ];
+    			enableOnlineThemes = true;
+  		};
+  		discord.equicord.enable = true;
+	};  
+
+};
   # Don't hard-fail activation on pre-existing dotfiles; move them to *.backup.
   home-manager.backupFileExtension = "backup";
   home-manager.users.ursomrano71 = {
@@ -450,7 +456,8 @@ let
   	gamemode
   	mangohud
   	fastfetch
-  	btop 
+  	btop
+	nvtop
 	
    	# --- File management ---
    	thunar
