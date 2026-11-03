@@ -236,12 +236,10 @@ hl.config({
         skip_non_kms_dmabuf_formats = true,
     },
     dwindle = {
-        special_scale_factor = 0.8,
         preserve_split = true,
     },
     master = {
         new_status = "master",
-        special_scale_factor = 0.8,
     },
     ecosystem = {
         no_update_news = true,
@@ -296,6 +294,98 @@ hl.window_rule({ match = { float = false, workspace = "f[1-10]" }, rounding = 4 
 -- Workspace rules
 hl.workspace_rule({ workspace = "w[tv1-10]", gaps_out = 5, gaps_in = 3 })
 hl.workspace_rule({ workspace = "f[1]", gaps_out = 5, gaps_in = 3 })
+
+-- Hyprland 0.57 removed dwindle/master.special_scale_factor and has no native
+-- replacement. Reproduce the old behaviour: every tiled window on a special
+-- workspace is shrunk to 80% of its tile and centred there. This is per window,
+-- unlike gaps_out, and is independent of monitor resolution.
+local specialScale       = 0.8
+local specialScaleDirty  = false
+local specialScaleMarked = {}
+
+local function specialScaleSetPseudo(window, enabled)
+    hl.dispatch(hl.dsp.window.pseudo({ action = enabled and "enable" or "disable", window = window }))
+end
+
+local function specialScaleWanted(window)
+    if window == nil or window.floating or window.group ~= nil then
+        return false
+    end
+    if (window.fullscreen or 0) ~= 0 or (window.fullscreen_client or 0) ~= 0 then
+        return false
+    end
+    return window.workspace ~= nil and window.workspace.special == true
+end
+
+local function specialScaleApply()
+    local present = {}
+
+    for _, window in ipairs(hl.get_windows()) do
+        local id = window.stable_id
+        if specialScaleWanted(window) then
+            present[id] = true
+
+            -- Measure the real tile with pseudo off, then give the window a
+            -- pseudo size of 80% of that tile. Pseudo centres it in the tile.
+            specialScaleSetPseudo(window, false)
+            local tile = window.size
+            specialScaleSetPseudo(window, true)
+
+            -- resize is relative and the default pseudo size can be larger
+            -- than the tile, so normalise to the minimum size first.
+            hl.dispatch(hl.dsp.window.resize({ x = -1e9, y = -1e9, relative = true, window = window }))
+            local seed = window.size
+            hl.dispatch(hl.dsp.window.resize({
+                x = tile.x * specialScale - seed.x,
+                y = tile.y * specialScale - seed.y,
+                relative = true,
+                window = window,
+            }))
+
+            specialScaleMarked[id] = true
+        end
+    end
+
+    for id in pairs(specialScaleMarked) do
+        if not present[id] then
+            local window = hl.get_window("stableid:" .. id)
+            if window ~= nil then
+                specialScaleSetPseudo(window, false)
+            end
+            specialScaleMarked[id] = nil
+        end
+    end
+end
+
+local function specialScaleSchedule()
+    specialScaleDirty = true
+end
+
+for _, event in ipairs({
+    "window.open",
+    "window.open_early",
+    "window.close",
+    "window.destroy",
+    "window.move_to_workspace",
+    "window.update_state",
+    "window.fullscreen",
+    "monitor.layout_changed",
+    "workspace.created",
+    "workspace.removed",
+    "config.reloaded",
+    "hyprland.start",
+}) do
+    hl.on(event, specialScaleSchedule)
+end
+
+hl.timer(function()
+    if not specialScaleDirty then
+        return
+    end
+    specialScaleDirty = false
+    specialScaleApply()
+end, { timeout = 150, type = "repeat" })
+specialScaleDirty = true
 
 -- Layer rules
 hl.layer_rule({ match = { namespace = "^logout_dialog$" }, animation = "slide top" })

@@ -234,15 +234,18 @@ let
   	enable = true;
   	package = pkgs.ollama-cuda;
   	loadModels =
-      if host == "NixOS-Laptop"
-      then [ "qwen3.5:9b" ]
-      else [ "qwen3-coder:30b" ];
+    		if host == "NixOS-Laptop"
+    		then [ "qwen3:4b-instruct-2507-q4_K_M" ]
+    		else [ "qwen3-coder:30b" ];
   	environmentVariables = {
     		OLLAMA_CONTEXT_LENGTH =
-        if host == "NixOS-Laptop" then "16384" else "32768";
+      			if host == "NixOS-Laptop" then "12288" else "32768";
+  	} 
+	// pkgs.lib.optionalAttrs (host == "NixOS-Laptop") {
+    		OLLAMA_FLASH_ATTENTION = "1";
+    		OLLAMA_KV_CACHE_TYPE = "q8_0";
   	};
   };
-
   #user and auto login
   # services.getty.autologinUser = "ursomrano71";
   services.seatd.enable = false;

@@ -51,17 +51,17 @@ with lib;
 		};
 
 		# PC-only packages
-		home-manager.users.ursomrano71.home.packages = with pkgs; [
-			whipper
-		];
-		environment.systemPackages = [
-  			(pkgs.blender.overrideAttrs (oldAttrs: {
-    			nativeBuildInputs = (oldAttrs.nativeBuildInputs or []) ++ [ pkgs.makeWrapper ];
-    				postFixup = (oldAttrs.postFixup or "") + ''
-      					wrapProgram $out/bin/blender \
-        				--set WAYLAND_DISPLAY 0
-    				'';
-  			}))
+		home-manager.users.ursomrano71 = {
+			home.packages = with pkgs; [
+				(pkgs.writeShellScriptBin "blender" ''
+            				export WAYLAND_DISPLAY=0
+            				exec ${pkgs.blender}/bin/blender "$@"
+        			'')				
+				whipper
+			];
+		};
+		environment.systemPackages = with pkgs; [
+  			#stuff		
 		];
 	};
 }
