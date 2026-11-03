@@ -243,7 +243,7 @@ let
   	} 
 	// pkgs.lib.optionalAttrs (host == "NixOS-Laptop") {
     		OLLAMA_FLASH_ATTENTION = "1";
-    		OLLAMA_KV_CACHE_TYPE = "q8_0";
+    		OLLAMA_KV_CACHE_TYPE = "q4_0";
   	};
   };
   #user and auto login
