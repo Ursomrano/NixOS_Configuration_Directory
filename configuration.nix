@@ -218,7 +218,7 @@ let
   # Services
   services.scx-loader = {
   	enable = true;
-  	config = "scx_bpfland";
+  	config.scheduler = "scx_bpfland";
   };
   services.xserver.xkb = {
     layout = "us";
