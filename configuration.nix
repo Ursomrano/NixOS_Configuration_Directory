@@ -216,7 +216,7 @@ let
   };
 
   # Services
-  services.scx = {
+  services.scx-loader = {
   	enable = true;
   	scheduler = "scx_bpfland";
   };
